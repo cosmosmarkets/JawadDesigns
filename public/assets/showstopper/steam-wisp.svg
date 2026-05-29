@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- steam-wisp.svg — soft rising steam for the plated hero (Stage 2).
+     Blurred translucent ribbons; animate translateY up + opacity, or feTurbulence displacement, for the curl.
+     Composite with `screen` over the dark stage. Drop/hide under reduced-motion. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="320" viewBox="0 0 240 320" aria-hidden="true">
+  <defs>
+    <linearGradient id="steam" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%"  stop-color="#FCE7C2" stop-opacity="0"/>
+      <stop offset="45%" stop-color="#F4E7D6" stop-opacity="0.20"/>
+      <stop offset="100%" stop-color="#F4E7D6" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+  </defs>
+  <g filter="url(#soft)" fill="none" stroke="url(#steam)" stroke-width="14" stroke-linecap="round">
+    <path d="M104 300 C 84 250, 132 224, 112 176 C 94 132, 134 104, 116 56"/>
+    <path d="M140 300 C 160 254, 116 226, 138 180 C 156 138, 120 108, 140 60" opacity="0.7"/>
+  </g>
+</svg>

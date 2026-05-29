@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vignette.svg — global film-noir vignette (Stage 1).
+     Full-bleed fixed layer above content, below grain. Darkens edges, keeps centre lit.
+     Transparent core so it never muddies body copy contrast. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="900" viewBox="0 0 1280 900" preserveAspectRatio="none">
+  <defs>
+    <radialGradient id="vig" cx="50%" cy="46%" r="75%">
+      <stop offset="0%"  stop-color="#000000" stop-opacity="0"/>
+      <stop offset="58%" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="82%" stop-color="#0b0908" stop-opacity="0.38"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.72"/>
+    </radialGradient>
+  </defs>
+  <rect width="1280" height="900" fill="url(#vig)"/>
+</svg>

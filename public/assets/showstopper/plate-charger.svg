@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- plate-charger.svg — empty plated charger, top-down, for "The Pass" hero (Stage 2).
+     Sits centre under spotlight-pool.svg. Ember rim-light on the upper-left edge reads as the
+     warm key light; soft cast shadow grounds it. Plate is intentionally empty — the headline plates onto it. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="560" viewBox="0 0 560 560" role="img" aria-label="Empty charger plate under spotlight">
+  <defs>
+    <radialGradient id="cast" cx="50%" cy="56%" r="50%">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0.55"/>
+      <stop offset="70%" stop-color="#000000" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="charger" cx="42%" cy="38%" r="68%">
+      <stop offset="0%"   stop-color="#3a302a"/>
+      <stop offset="55%"  stop-color="#241d19"/>
+      <stop offset="100%" stop-color="#15110e"/>
+    </radialGradient>
+    <radialGradient id="well" cx="44%" cy="40%" r="60%">
+      <stop offset="0%"   stop-color="#2c241f"/>
+      <stop offset="70%"  stop-color="#1c1613"/>
+      <stop offset="100%" stop-color="#120e0c"/>
+    </radialGradient>
+    <radialGradient id="spec" cx="40%" cy="34%" r="42%">
+      <stop offset="0%" stop-color="#FCE7C2" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#FCE7C2" stop-opacity="0"/>
+    </radialGradient>
+    <!-- arc gradient for ember rim-light: bright upper-left, fading round -->
+    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"  stop-color="#F2A35A"/>
+      <stop offset="35%" stop-color="#D2462F"/>
+      <stop offset="70%" stop-color="#9e2f1f" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#9e2f1f" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- cast shadow -->
+  <ellipse cx="280" cy="312" rx="248" ry="232" fill="url(#cast)"/>
+
+  <!-- charger disc -->
+  <circle cx="280" cy="280" r="248" fill="url(#charger)"/>
+  <!-- ember rim-light: a thick arc hugging the upper-left edge -->
+  <circle cx="280" cy="280" r="244" fill="none" stroke="url(#rim)" stroke-width="6" opacity="0.9"/>
+  <!-- brass hairline on charger -->
+  <circle cx="280" cy="280" r="232" fill="none" stroke="#C9A24B" stroke-width="1" opacity="0.45"/>
+
+  <!-- inner step -->
+  <circle cx="280" cy="280" r="186" fill="#1b1511"/>
+  <circle cx="280" cy="280" r="184" fill="none" stroke="#000" stroke-width="3" opacity="0.5"/>
+
+  <!-- plate well -->
+  <circle cx="280" cy="280" r="170" fill="url(#well)"/>
+  <circle cx="280" cy="280" r="170" fill="url(#spec)"/>
+  <!-- faint brass well ring -->
+  <circle cx="280" cy="280" r="150" fill="none" stroke="#C9A24B" stroke-width="1" opacity="0.22"/>
+</svg>

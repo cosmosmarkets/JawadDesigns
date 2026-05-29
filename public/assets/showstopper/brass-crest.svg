@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- brass-crest.svg — embossed JD monogram crest for the Menu card cover (Stage 4) & footer mark.
+     Champagne-brass gradient with dual-shadow emboss + laurel wreath. Monogram is live <text>
+     (Bodoni/serif) so it can be re-typeset; convert to outlines if shipping without the font. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="280" height="280" viewBox="0 0 280 280" role="img" aria-label="Jawad Design crest">
+  <defs>
+    <radialGradient id="crestGlow" cx="50%" cy="46%" r="50%">
+      <stop offset="0%" stop-color="#C9A24B" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="#C9A24B" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="brass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#F0D79A"/>
+      <stop offset="38%"  stop-color="#C9A24B"/>
+      <stop offset="62%"  stop-color="#9B7A33"/>
+      <stop offset="100%" stop-color="#E3C476"/>
+    </linearGradient>
+    <linearGradient id="brassEdge" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F4E3AE"/>
+      <stop offset="100%" stop-color="#8A6B2C"/>
+    </linearGradient>
+    <!-- one laurel leaf, reused -->
+    <path id="leaf" d="M0 0 Q 6.5 -6 4 -17 Q -2.5 -7 0 0 Z" fill="url(#brass)"/>
+  </defs>
+
+  <circle cx="140" cy="140" r="132" fill="url(#crestGlow)"/>
+
+  <!-- rings -->
+  <circle cx="140" cy="140" r="120" fill="none" stroke="url(#brassEdge)" stroke-width="3"/>
+  <circle cx="140" cy="140" r="111" fill="none" stroke="#C9A24B" stroke-width="1" opacity="0.7"/>
+
+  <!-- laurel wreath: left branch + mirrored right branch -->
+  <g opacity="0.95">
+    <g>
+      <use href="#leaf" transform="translate(58,196) rotate(-28)"/>
+      <use href="#leaf" transform="translate(46,170) rotate(-50)"/>
+      <use href="#leaf" transform="translate(40,142) rotate(-74)"/>
+      <use href="#leaf" transform="translate(42,114) rotate(-98)"/>
+      <use href="#leaf" transform="translate(52,90)  rotate(-120)"/>
+      <use href="#leaf" transform="translate(70,70)  rotate(-142)"/>
+    </g>
+    <g transform="translate(280,0) scale(-1,1)">
+      <use href="#leaf" transform="translate(58,196) rotate(-28)"/>
+      <use href="#leaf" transform="translate(46,170) rotate(-50)"/>
+      <use href="#leaf" transform="translate(40,142) rotate(-74)"/>
+      <use href="#leaf" transform="translate(42,114) rotate(-98)"/>
+      <use href="#leaf" transform="translate(52,90)  rotate(-120)"/>
+      <use href="#leaf" transform="translate(70,70)  rotate(-142)"/>
+    </g>
+  </g>
+
+  <!-- top pip -->
+  <circle cx="140" cy="34" r="4.5" fill="url(#brass)"/>
+
+  <!-- monogram, embossed: dark shadow under, light highlight above, brass fill -->
+  <g font-family="'Bodoni Moda', Georgia, 'Times New Roman', serif" font-weight="600" font-size="96" text-anchor="middle">
+    <text x="141" y="174" fill="#15110d" opacity="0.55">JD</text>
+    <text x="139.4" y="172.4" fill="#FBEFCB" opacity="0.5">JD</text>
+    <text x="140" y="173" fill="url(#brass)">JD</text>
+  </g>
+
+  <!-- est. line -->
+  <text x="140" y="214" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace"
+        font-size="9" letter-spacing="3" fill="#C9A24B" opacity="0.85">EST. ONE CHEF</text>
+</svg>
