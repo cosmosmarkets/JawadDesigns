@@ -13,6 +13,9 @@ import "./styles/k3-pass3.css";
 import "./styles/k3-pass4-material.css";
 import { ThemeProvider } from "@/components/site/theme-provider";
 import { Atmosphere } from "@/components/site/atmosphere";
+import { Nav } from "@/components/site/nav";
+import { Footer } from "@/components/site/footer";
+import { SmoothScrollProvider } from "@/components/site/smooth-scroll-provider";
 
 const bodoni = Bodoni_Moda({
   subsets: ["latin"],
@@ -72,6 +75,15 @@ export default function RootLayout({
   return (
     <html lang="en" className={fontVars} suppressHydrationWarning>
       <body data-motion="on">
+        {/* Pre-paint guard: add jd-anim only when motion is allowed, so reveals
+            start hidden before ScrollTrigger animates them (no flash). Reduced
+            motion / no-JS leaves the class off and all content visible. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('jd-anim')}catch(e){}",
+          }}
+        />
         <ThemeProvider
           attribute="class"
           forcedTheme="dark"
@@ -79,7 +91,10 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
+          <SmoothScrollProvider />
+          <Nav />
           {children}
+          <Footer />
           <Atmosphere />
         </ThemeProvider>
       </body>

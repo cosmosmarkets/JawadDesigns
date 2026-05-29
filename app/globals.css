@@ -66,3 +66,63 @@
   max-width: 52ch;
   margin: 0 0 10px;
 }
+
+/* Contact page — the order form, reusing the k3-order chip/input atoms. */
+.jd-contact__inner {
+  max-width: 640px;
+  margin-inline: auto;
+}
+.jd-contact__head {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: clamp(28px, 4vw, 44px);
+}
+.jd-contact__h {
+  font-size: clamp(44px, 7vw, 84px);
+  line-height: 0.95;
+}
+.jd-contact__sub {
+  color: var(--bone-dim);
+  max-width: 50ch;
+}
+.jd-contact__card {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  background: linear-gradient(165deg, #241a16, #161210);
+  border: 1px solid var(--hair-2);
+  border-radius: 18px;
+  padding: clamp(24px, 4vw, 40px);
+}
+.jd-contact__field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.jd-contact__label {
+  color: var(--brass-soft);
+}
+.jd-contact__opt {
+  color: var(--bone-soft);
+  text-transform: none;
+  letter-spacing: 0;
+}
+.jd-contact__textarea {
+  flex: none;
+  width: 100%;
+  resize: vertical;
+  min-height: 112px;
+  font: inherit;
+}
+.jd-contact__submit {
+  align-self: flex-start;
+}
+.jd-contact__error {
+  color: var(--ember);
+  font-size: 14px;
+}

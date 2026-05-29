@@ -191,10 +191,13 @@ ul, ol { list-style: none; }
    No CSS transition here: the motion is owned by GSAP so the two never fight.
    The hidden initial state below prevents a flash before ScrollTrigger runs;
    the fallbacks (reduced motion / tweak off / GSAP missing) snap to visible.   */
-/* Static-parity port: GSAP/ScrollTrigger reveal is reintroduced in Stage 0, so
-   keep .reveal visible at rest (its hidden initial state needs JS to undo). */
+/* Stage 0: reveal motion is owned by GSAP/ScrollTrigger (see smooth-scroll-provider).
+   Visible at rest so no-JS / reduced-motion / GSAP-missing never hides content.
+   The layout boot script adds html.jd-anim pre-paint ONLY when motion is allowed,
+   collapsing reveals just before ScrollTrigger animates them in (no flash). */
 .reveal { opacity: 1; transform: none; }
 .reveal.in { opacity: 1; transform: none; }
+html.jd-anim .reveal { opacity: 0; transform: translateY(26px); }
 
 /* Fail-safe: if the GSAP CDN never loads, never leave content hidden. */
 html.jd-no-gsap .reveal { opacity: 1; transform: none; }

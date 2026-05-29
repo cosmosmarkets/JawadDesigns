@@ -1,11 +1,19 @@
-import { Placeholder } from "@/components/site/placeholder";
+import type { Metadata } from "next";
+import { Suspense } from "react";
+import { ContactForm } from "@/components/site/contact-form";
+
+export const metadata: Metadata = {
+  title: "Contact — Jawad Design",
+  description:
+    "Place your order. Leave your email and what you're launching — one chef replies within 24 hours with a plan and a price.",
+};
 
 export default function ContactPage() {
+  // ContactForm reads ?dish via useSearchParams, so it must sit under Suspense
+  // to avoid Next's client-side-rendering bailout at build.
   return (
-    <Placeholder
-      kicker="Contact"
-      title="Reserve your seat."
-      copy="The full contact form is being built. For now, place an order from the homepage or email hi@jawad.design."
-    />
+    <Suspense>
+      <ContactForm />
+    </Suspense>
   );
 }

@@ -34,7 +34,7 @@ hooks/          # custom hooks
 content/        # MDX
 ```
 
-Routes: `/`, `/work`, `/work/[slug]`, `/services`, `/about`, `/journal`, `/journal/[slug]`, `/contact`, `not-found`.
+Routes: `/` (multipage funnel), `/work`, `/work/[slug]`, `/menu`, `/about`, `/contact`, `/journal`, `/journal/[slug]`, `not-found`. `/work`, `/menu`, `/about`, and `/contact` now hold real content (split out of the old single-page home); `/services` was removed in favor of `/menu`. `/work/[slug]` and `/journal*` remain placeholders.
 
 ## Conventions
 

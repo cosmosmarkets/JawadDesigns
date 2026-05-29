@@ -12,9 +12,17 @@
   3. **Printing order ticket** — persistent scroll device, climaxing at the CTA.
   - Plus: the five-course Process becomes a *true* cinematic pinned scrub (part of the motion baseline, not a fourth signature).
 
-**Skills assumed available in Claude Design** (installed locally; reference them by name so they trigger): `taste-skill`, `redesign-skill`, `gsap-core`, `gsap-timeline`, `gsap-scrolltrigger`, `frontend-design`, `brutalist-skill`/`minimalist-skill` (direction reference only), `imagegen-frontend-web` (for visual reference frames).
+**Environment (read first):** these skills are installed as **project skills** in `jawad-designs/.claude/skills/`. They only load when you run **Claude Code with `jawad-designs/` as the working directory** (the real Next app + CLAUDE.md live there, not the parent folder). Before starting, `git add .claude` and commit it — it's currently untracked, so the skill set isn't yet reproducible.
 
-> **How to use this doc:** work top to bottom. Each stage has a single copy-paste prompt and an acceptance check. Don't start a stage until the previous one passes its check. Paste each prompt into Claude Design as its own turn.
+**Skills available locally** (reference them by name so they trigger):
+- **Motion:** `gsap-react` (lead with this — the codebase uses `useGSAP` from `@gsap/react`), `gsap-core`, `gsap-timeline`, `gsap-scrolltrigger`, `gsap-plugins` (ScrollTrigger / SplitText / ScrollSmoother specifics), `gsap-performance` (drives the perf budget), `gsap-utils`, `gsap-frameworks`.
+- **Design/material:** `taste-skill`, `redesign-skill`, `frontend-design`, `ui-styling`, `ui-ux-pro-max`, `design-system`, `brandkit`, `brutalist-skill`/`minimalist-skill` (direction reference only).
+- **Assets:** `imagegen-frontend-web` (visual reference frames), `image-to-code-skill` (turn those frames into components).
+- **QA/perf/SEO:** `seo-unlighthouse` (Lighthouse scoring for the perf budget + Stage 7), plus the `seo-technical` / `seo-schema` / `seo-sitemap` suite for discoverability (out of motion scope, but a portfolio needs to be found — schedule after Stage 7).
+
+> See `SKILL-STAGE-MAP.md` for the exact skill→stage mapping.
+
+> **How to use this doc:** work top to bottom. Each stage has a single copy-paste prompt and an acceptance check. Don't start a stage until the previous one passes its check. Run each stage as its own Claude Code session (`/clear` + `git tag stage-N` between stages) to keep context clean and rollback cheap.
 
 ---
 
@@ -24,7 +32,7 @@
 - **Cumulative motion discipline:** every new moment competes for attention with the others and with the actual goal (justifying the Chef's Table price). Prefer fewer, sharper moments over more. The printing-ticket device is the most at-risk of becoming distracting — watch it closely.
 - **Kill criteria:** if a signature moment doesn't clearly land at its acceptance check, cut it rather than polishing a gimmick. A clean static section beats a half-working effect.
 - **Rollback:** branch/tag per stage (e.g. `git tag stage-2-hero`) so a failed stage is cheap to abandon without unwinding later work.
-- **SplitText licensing:** SplitText is a paid GreenSock Club plugin. If it's not licensed/available, fall back to hand-rolled line splitting or Splitting.js — don't let a licensing gap block Stages 2/3/6. Confirm availability during Pre-flight.
+- **SplitText is free — no fallback needed.** As of GSAP 3.13 (April 30 2025, post-Webflow), the entire toolset including SplitText is free for commercial use. Your `gsap@^3.15.0` already includes it, and SplitText was rewritten with native screen-reader accessibility and built-in masking for reveal effects — use the new masking API directly. The old "hand-rolled split / Splitting.js fallback" hedging is obsolete; drop it.
 
 ---
 
@@ -36,11 +44,11 @@
 ```
 Before any redesign work:
 1. Capture full-page baseline screenshots at desktop (1440px), tablet (768px), and mobile (375px), plus a current Lighthouse performance score. Save these as the "before" reference.
-2. Confirm whether the GSAP SplitText plugin is licensed/available here. If not, note the fallback (hand-rolled split or Splitting.js) we'll use for masked line reveals.
-3. Set up the visual assets we'll need: plate/charger, warm spotlight pool, paper/printed-card texture, brass crest, garnish flourish, thermal-paper texture, film grain. Generate or source these now (imagegen-frontend-web) so later stages aren't blocked waiting on art.
-4. Establish the performance budget as a checklist we re-run each stage (added JS weight, LCP, FPS).
+2. Confirm SplitText imports and runs from the installed gsap package (it's free as of 3.13 / your 3.15) — do a one-line smoke test. No fallback needed.
+3. Set up the visual assets we'll need: plate/charger, warm spotlight pool, paper/printed-card texture, brass crest, garnish flourish, thermal-paper texture, film grain. Generate or source these now (invoke imagegen-frontend-web; then image-to-code-skill where a frame should become a component) so later stages aren't blocked waiting on art.
+4. Establish the performance budget as a checklist we re-run each stage (added JS weight, LCP, FPS). Wire seo-unlighthouse so the Lighthouse number is scriptable, not eyeballed, and capture the baseline JS bundle size now so every later stage can diff against it.
 
-Do not change any visible design. Output: baseline screenshots, SplitText status, an asset inventory, and the perf checklist.
+Do not change any visible design. Output: baseline screenshots, SplitText smoke-test result, an asset inventory, and the perf checklist (Lighthouse + bundle-size baseline recorded).
 ```
 **Acceptance check:** baseline screenshots + Lighthouse score saved; SplitText status known with a fallback decided; all signature-moment assets exist; perf budget written as a reusable checklist.
 
@@ -71,7 +79,7 @@ Do not change any visible design. Output: baseline screenshots, SplitText status
 
 **Prompt:**
 ```
-Invoke the gsap-core and gsap-scrolltrigger skills.
+Invoke gsap-react (primary — this codebase uses useGSAP from @gsap/react), gsap-core, and gsap-scrolltrigger.
 
 Set up the animation foundation for this site without changing any visible design yet:
 1. Add GSAP with the ScrollTrigger and SplitText plugins.
@@ -91,7 +99,7 @@ Do not redesign anything visually in this step. Confirm scroll feels smooth and 
 
 **Prompt:**
 ```
-Invoke the taste-skill and redesign-skill.
+Invoke taste-skill, redesign-skill, and ui-styling (for the layered shadow/letterpress/emboss treatment).
 
 Give the whole site a cinematic duotone, film-noir-kitchen material treatment while keeping the existing charcoal/ember/brass/gold tokens:
 - Add a subtle film-grain / noise overlay across the page (SVG or canvas, ~3-5% opacity, blended).
@@ -112,7 +120,7 @@ Keep it tasteful and legible — this is fine dining, not a haunted house. Respe
 
 **Prompt:**
 ```
-Invoke gsap-timeline and gsap-core.
+Invoke gsap-react, gsap-timeline, gsap-core, gsap-plugins (for SplitText), and gsap-performance (the WebGL shader must stay inside the JS/FPS budget).
 
 Rebuild the hero as "The Pass — a plated dish under the spotlight":
 - A dark spotlit stage. An empty plate/charger sits center under a warm pool of light.
@@ -133,7 +141,7 @@ Mobile: drop the shader to a static grain image, keep the plating timeline simpl
 
 **Prompt:**
 ```
-Invoke gsap-scrolltrigger and gsap-timeline.
+Invoke gsap-react, gsap-scrolltrigger, gsap-timeline, gsap-plugins (SplitText line masking), and gsap-performance (pinned scrub must not drop frames).
 
 Two things:
 
@@ -161,7 +169,7 @@ Everything must degrade to static stacked content under prefers-reduced-motion.
 
 **Prompt:**
 ```
-Invoke gsap-timeline and taste-skill.
+Invoke gsap-react, gsap-timeline, taste-skill, and ui-ux-pro-max (the fold must stay keyboard/SR-operable — see the in-stage a11y requirement).
 
 Turn the Menu section's existing openable card into a real folded menu that unfolds in 3D:
 - Start as a closed, textured printed card (paper grain, brass crest, letterpress title) sitting under the spotlight.
@@ -184,7 +192,7 @@ Accessibility (verify in THIS stage, not Stage 7): the menu must be fully operab
 
 **Prompt:**
 ```
-Invoke gsap-scrolltrigger and gsap-core.
+Invoke gsap-react, gsap-scrolltrigger, gsap-core, and gsap-performance (the persistent device is the most at-risk for jank/cost — keep it cheap).
 
 Upgrade the existing order docket into a thermal kitchen ticket that physically prints as you scroll:
 - Style it as a real receipt: monospace, perforated/torn top edge, faint thermal-paper texture, slight curl shadow.
@@ -206,7 +214,7 @@ Accessibility (verify in THIS stage): the ticket is decorative — it must not t
 
 **Prompt:**
 ```
-Invoke taste-skill and frontend-design.
+Invoke taste-skill, frontend-design, ui-ux-pro-max, and design-system (so the editorial type scale + baseline grid stay token-driven, not hardcoded).
 
 Re-lay-out the Trust, Why (the short menu), and Pantry (always included) sections to break the safe, centered, symmetrical grid — without changing the copy:
 - Introduce asymmetry and a broken/editorial grid: offset columns, intentional overlap, oversized course numbers bleeding off the edge, type that aligns to a real baseline grid.
@@ -225,8 +233,10 @@ Show me before/after for each of the three sections.
 
 **Prompt:**
 ```
+Invoke gsap-performance and seo-unlighthouse.
+
 Do a final pass:
-- Performance: lazy-init shaders/WebGL, pause off-screen animations, ensure no layout thrash; target Lighthouse performance 90+ on desktop.
+- Performance: lazy-init shaders/WebGL, pause off-screen animations, ensure no layout thrash; target Lighthouse performance 90+ on desktop. Score it with seo-unlighthouse (scripted, not eyeballed) and diff the final JS bundle against the Pre-flight baseline to confirm the ≤150KB budget held.
 - Verify prefers-reduced-motion across EVERY new animation (hero, scrub, unfold, ticket, reveals) — nothing should move.
 - Mobile QA at 375px and 768px AND on a real low-end Android device (not just a narrow viewport): hero, menu unfold, process scrub, ticket pill all behave and hold framerate.
 - Accessibility: focus states, headings order, alt text, the menu/ticket are operable without the animation, color contrast on body copy.

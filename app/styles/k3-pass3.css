@@ -173,9 +173,11 @@ body[data-motion="off"] .k3-menucard__cover { display: none; }
 .k2-tier:hover { transform: translateY(-6px); border-color: var(--hair-2); box-shadow: 0 30px 60px -34px rgba(0,0,0,0.6); }
 .k2-foot__cols a, .k2-trust__link { transition: color .3s var(--e); }
 
-/* hairline reveal helper (drawn by GSAP/ScrollTrigger — see k3-motion.js; no CSS transition) */
-.k3-drawline { height: 1px; background: var(--hair-2); transform: scaleX(0); transform-origin: left; }
+/* hairline reveal helper (drawn by GSAP/ScrollTrigger — see smooth-scroll-provider; no CSS transition).
+   Visible at rest for the no-JS / reduced path; html.jd-anim collapses it so GSAP can draw it. */
+.k3-drawline { height: 1px; background: var(--hair-2); transform: scaleX(1); transform-origin: left; }
 .k3-drawline.in { transform: scaleX(1); }
+html.jd-anim .k3-drawline { transform: scaleX(0); }
 
 /* ============== REDUCED MOTION / MOTION OFF ============== */
 @media (prefers-reduced-motion: reduce) {

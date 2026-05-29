@@ -39,8 +39,9 @@ Visual direction: **cinematic duotone fine-dining** — high-contrast ember-on-c
 
 ## Routes
 
-- `/` — the **ported real home** (static parity).
-- `/work`, `/work/[slug]`, `/services`, `/about`, `/journal`, `/journal/[slug]`, `/contact`, and `not-found` — on-brand placeholders, real content TBD.
+- `/` — the **real home**, now a lean multipage funnel (teasers for work, chef, and an emphasized menu preview) at static parity.
+- `/work`, `/menu`, `/about`, `/contact` — **real pages** split out of the old single-page home (full case study, services + pricing + always-included, full chef bio, and the order form respectively). `/menu` replaced the removed `/services`.
+- `/work/[slug]`, `/journal`, `/journal/[slug]`, and `not-found` — on-brand placeholders, real content TBD.
 
 ## Before you push
 

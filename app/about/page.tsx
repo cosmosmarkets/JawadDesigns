@@ -1,11 +1,12 @@
-import { Placeholder } from "@/components/site/placeholder";
+import type { Metadata } from "next";
+import { ChefFull } from "@/components/site/chef-full";
+
+export const metadata: Metadata = {
+  title: "About — Jawad Design",
+  description:
+    "Meet the chef. Jawad is a designer and developer running a one-chef studio — every site cooked by one pair of hands, brief to launch.",
+};
 
 export default function AboutPage() {
-  return (
-    <Placeholder
-      kicker="About"
-      title="One chef, one ticket."
-      copy="The fuller story of the kitchen is on its way. Meet the chef on the homepage in the meantime."
-    />
-  );
+  return <ChefFull />;
 }

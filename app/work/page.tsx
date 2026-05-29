@@ -1,11 +1,12 @@
-import { Placeholder } from "@/components/site/placeholder";
+import type { Metadata } from "next";
+import { WorkFull } from "@/components/site/work-full";
+
+export const metadata: Metadata = {
+  title: "Work — Jawad Design",
+  description:
+    "From the pass: weld, a two-sided developer marketplace designed and built solo — brand, product design, and a production Next.js build.",
+};
 
 export default function WorkPage() {
-  return (
-    <Placeholder
-      kicker="Work"
-      title="From the pass."
-      copy="The full plating of case studies is still in the kitchen. For now, weld is the signature dish on the homepage."
-    />
-  );
+  return <WorkFull />;
 }
