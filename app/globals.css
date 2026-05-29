@@ -2,26 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* shadcn/ui tokens, mapped onto the Jawad Design duotone palette (dark-only).
+   HSL triplets to match tailwind.config's hsl(var(--token)). The brand's own
+   tokens live in styles/k3-tokens.css; these exist so any shadcn component
+   added later inherits the ember-on-charcoal register instead of zinc. */
+@layer base {
+  :root,
+  .dark {
+    --background: 20 23% 5%;      /* --char  #100C0A */
+    --foreground: 34 58% 90%;     /* --bone  #F4E7D6 */
+    --card: 20 20% 9%;            /* --ash   */
+    --card-foreground: 34 58% 90%;
+    --popover: 20 20% 9%;
+    --popover-foreground: 34 58% 90%;
+    --primary: 9 65% 50%;         /* --ember #D2462F */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 26 16% 14%;
+    --secondary-foreground: 34 58% 90%;
+    --muted: 26 16% 14%;
+    --muted-foreground: 34 12% 62%; /* --bone-soft #a99f92 */
+    --accent: 42 54% 54%;         /* --brass #C9A24B */
+    --accent-foreground: 20 23% 5%;
+    --destructive: 9 65% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 30 12% 16%;
+    --input: 30 12% 16%;
+    --ring: 42 54% 54%;
+    --radius: 0.25rem;
   }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+}
+
+/* Placeholder routes (foundation phase) — centred, on-brand, reuse the tokens. */
+.jd-placeholder {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+.jd-placeholder__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+.jd-placeholder__title {
+  font-size: clamp(40px, 8vw, 92px);
+  margin: 6px 0 2px;
+}
+.jd-placeholder__copy {
+  color: var(--bone-dim);
+  max-width: 52ch;
+  margin: 0 0 10px;
 }

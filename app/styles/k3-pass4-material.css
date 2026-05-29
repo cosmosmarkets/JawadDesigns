@@ -1,0 +1,154 @@
+/* ============================================================================
+   k3-pass4-material.css — Stage 1 · cinematic duotone / film-noir-kitchen
+   ----------------------------------------------------------------------------
+   Loads AFTER k3-pass3.css so it wins. Adds, without changing the palette
+   tokens or layout:
+     • deepened blacks + warmer grounds (contrast tweak: subtle/medium/dramatic)
+     • a fixed grain + vignette + scroll-tracked candlelight pool (#jd-atmos)
+     • ember rim-light on the Chef's Table tier + the CTA card
+     • brass letterpress (engraved hairline) on dividers + the menu card
+     • embossed brass/gold text (dual text-shadow)
+     • a warmer, lit frame around the weld screenshot (image stays full colour)
+   Everything degrades under prefers-reduced-motion and the "Scroll & haze" tweak.
+   ========================================================================== */
+
+/* ---------------- 1 · CONTRAST — deepen the blacks (default: medium) -------
+   Only the dark-room grounds move; .k3-light re-tokenises --char locally to
+   cream, so the printed-paper sections are untouched. Highlights (--bone) hold
+   so body copy keeps its ≥ 4.5:1 contrast.                                    */
+body                            { --char:#100C0A; --char-2:#181310; --ash:#241c18; --ash-2:#2c231d; }
+body[data-contrast="subtle"]    { --char:#15110F; --char-2:#1e1814; --ash:#2a221d; --ash-2:#342a23; }
+body[data-contrast="medium"]    { --char:#100C0A; --char-2:#181310; --ash:#241c18; --ash-2:#2c231d; }
+body[data-contrast="dramatic"]  { --char:#0a0706; --char-2:#120d0b; --ash:#1c1612; --ash-2:#241b16; }
+
+/* ---------------- 2 · ATMOSPHERE OVERLAY (grain + vignette + spotlight) ----- */
+:root {
+  --jd-spot-y: 42%;            /* vertical centre of the lit pool (scroll-driven) */
+  --jd-vign: 0.5;              /* vignette strength      (spotlight tweak)        */
+  --jd-spot-strength: 0.9;     /* warm pool strength     (spotlight tweak)        */
+}
+body[data-atmos="subtle"]     { --jd-vign: 0.34; --jd-spot-strength: 0.60; }
+body[data-atmos="medium"]     { --jd-vign: 0.50; --jd-spot-strength: 0.90; }
+body[data-atmos="pronounced"] { --jd-vign: 0.72; --jd-spot-strength: 1.00; }
+
+#jd-atmos {
+  position: fixed; inset: 0; z-index: 40;
+  pointer-events: none; overflow: hidden;
+  contain: layout style paint;
+}
+#jd-atmos > div { position: absolute; inset: 0; pointer-events: none; }
+
+/* vignette — darkens the frame edges on BOTH registers (multiply). The bright
+   middle that survives IS the lit pool; on cream paper this reads as a menu
+   caught in a pool of light. */
+.jd-atmos__vign {
+  mix-blend-mode: multiply;
+  opacity: var(--jd-vign);
+  background: radial-gradient(132% 104% at 50% var(--jd-spot-y),
+              transparent 30%, rgba(26,15,8,0.6) 66%, #140b05 100%);
+}
+
+/* warm candlelight — ADDS amber light, mostly visible over the dark room
+   (screen barely affects the already-bright paper). */
+.jd-atmos__spot {
+  mix-blend-mode: screen;
+  opacity: var(--jd-spot-strength);
+  background: radial-gradient(48% 42% at 50% var(--jd-spot-y),
+              rgba(255,226,170,0.13), rgba(255,206,150,0.045) 46%, transparent 72%);
+}
+
+/* film grain — gently animated flicker, ~5%. Larger than the frame so the
+   per-frame jitter never exposes an edge. */
+.jd-atmos__grain {
+  inset: -25%;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  will-change: transform;
+  animation: jdGrain 0.5s steps(1) infinite;
+}
+@keyframes jdGrain {
+  0%   { transform: translate(0, 0); }
+  10%  { transform: translate(-4%, -5%); }
+  20%  { transform: translate(-9%, 4%); }
+  30%  { transform: translate(5%, -8%); }
+  40%  { transform: translate(-4%, 11%); }
+  50%  { transform: translate(-11%, 5%); }
+  60%  { transform: translate(7%, 7%); }
+  70%  { transform: translate(9%, -5%); }
+  80%  { transform: translate(-7%, -10%); }
+  90%  { transform: translate(6%, 9%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* grain motion off → static (still textured); grain tweak off → gone */
+@media (prefers-reduced-motion: reduce) { .jd-atmos__grain { animation: none; } }
+body[data-motion="off"] .jd-atmos__grain { animation: none; }
+body[data-grain="off"] .jd-atmos__grain { display: none; }
+
+/* the hero already carries its own grain — tone it down so the global layer
+   harmonises instead of stacking into noise */
+.k2-hero::after { opacity: 0.26; }
+
+/* ---------------- 3 · EMBER RIM-LIGHT (Chef's Table + CTA card only) -------- */
+.k2-tier.is-flag {
+  box-shadow:
+    inset 0 1px 0 rgba(255,172,124,0.45),          /* hot top rim          */
+    inset 0 0 36px -22px rgba(255,120,80,0.55),     /* faint inner ember    */
+    0 26px 70px -34px rgba(0,0,0,0.6),              /* directional shadow   */
+    0 0 58px -10px var(--ember-glow);               /* outer ember halo     */
+}
+.k3-reserve__card {
+  box-shadow:
+    inset 0 1px 0 rgba(255,168,128,0.4),
+    inset 0 0 44px -24px rgba(255,120,80,0.6),
+    0 34px 96px -42px #000,
+    0 0 72px -12px var(--ember-glow);
+}
+
+/* ---------------- 4 · BRASS LETTERPRESS on dividers + menu card ------------- */
+/* engraved hairline: a brass line with a faint warm highlight pressed beneath */
+.sec { box-shadow: 0 1px 0 rgba(255,236,205,0.045); }
+.k2-trust__mq { box-shadow: inset 0 1px 0 rgba(255,236,205,0.05), inset 0 -1px 0 rgba(0,0,0,0.35); }
+
+/* the printed menu card — seat it as pressed stock */
+.k3-menucard__cover {
+  box-shadow:
+    0 40px 80px -40px rgba(0,0,0,0.55),
+    inset 0 1px 0 rgba(255,255,255,0.55),
+    inset 0 0 0 1px rgba(156,122,47,0.25);
+}
+
+/* ---------------- 5 · EMBOSSED BRASS / GOLD TEXT --------------------------- */
+/* dark-room brass/gold: drop into shadow with a faint warm top light */
+.script,
+.k2-trust__mqitem,
+.k2-foot__mqitem,
+.k2-work__script,
+[style*="brass"],
+[style*="--gold"] {
+  text-shadow: 0 1px 1px rgba(0,0,0,0.55), 0 -1px 0 rgba(255,228,182,0.14);
+}
+/* on the cream paper sections it presses INTO the stock instead */
+.k3-light .script,
+.k3-light [style*="brass"],
+.k3-menucard__crest,
+.k3-menucard__open {
+  text-shadow: 0 1px 0 rgba(255,250,236,0.6), 0 -1px 1px rgba(60,40,15,0.22);
+}
+
+/* ---------------- 6 · IMAGERY — warm, lit frame (image stays full colour) --- */
+.k2-browser {
+  border: 1px solid rgba(201,162,75,0.42);
+  border-radius: 10px;
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.5),
+    0 44px 96px -42px rgba(0,0,0,0.88),
+    0 0 54px -16px var(--ember-glow);
+}
+.k2-browser__bar {
+  background: linear-gradient(180deg, #241a16, #1a1411);
+  border-bottom: 1px solid rgba(201,162,75,0.26);
+}
+.k2-browser__bar em { color: var(--brass-soft); opacity: 0.8; }

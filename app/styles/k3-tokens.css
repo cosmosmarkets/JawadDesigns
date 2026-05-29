@@ -1,0 +1,208 @@
+/* k3-tokens.css — Jawad Design "fine dining" re-dress (Pass 1).
+   Dark room lit by ember. Editorial display + condensed labels + one refined script.
+   Legacy poster class names (.sec.red/.btn.mustard/etc.) are remapped to the
+   dark register so k3-home.jsx markup needs minimal change.                */
+
+:root {
+  /* ---- Fine-dining palette ---- */
+  --char:      #161210;   /* charcoal base */
+  --char-2:    #1f1916;   /* slightly raised */
+  --ash:       #2A221D;   /* ash panels / cards */
+  --ash-2:     #342a23;
+  --bone:      #F4E7D6;   /* text */
+  --bone-dim:  #cdbfae;
+  --bone-soft: #a99f92;
+  --ember:     #D2462F;   /* the single hot accent */
+  --ember-deep:#9e2f1f;
+  --ember-glow: rgba(210,70,47,0.45);
+  --brass:     #C9A24B;   /* second accent, hairlines, hovers */
+  --brass-soft:#e0c071;
+  --gold:      #EAD18A;   /* champagne gold — Michelin / top tier only */
+  --hair:      rgba(244,231,214,0.14);
+  --hair-2:    rgba(201,162,75,0.32);   /* brass hairline */
+
+  /* ---- Legacy aliases (so existing markup maps onto the dark register) ---- */
+  --ink:   var(--char);
+  --red:   var(--ember);
+  --mustard: var(--brass);
+  --cream:  var(--char);
+  --cream-2: var(--char-2);
+  --cream-3: var(--ash);
+  --paper:  var(--ash);
+  --mute:   var(--bone-soft);
+  --line:   var(--hair);
+
+  /* ---- Type ---- */
+  --headline: var(--font-bodoni), "Bodoni Moda", Georgia, serif; /* swappable via tweak */
+  --display:  var(--font-bebas), "Bebas Neue", Impact, sans-serif;
+  --script:   var(--font-pinyon), "Pinyon Script", cursive;
+  --body:     var(--font-hanken), "Hanken Grotesk", system-ui, -apple-system, sans-serif;
+  --mono:     var(--font-ibm-plex), "IBM Plex Mono", ui-monospace, monospace;
+
+  /* ---- Spacing (more generous) ---- */
+  --pad-x: clamp(22px, 5.5vw, 120px);
+  --pad-y: clamp(80px, 11vw, 184px);
+
+  --ease: cubic-bezier(.22,.61,.36,1);
+}
+
+[data-density="dense"] { --pad-y: clamp(56px, 7vw, 112px); }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
+body { overflow-x: clip; }
+body {
+  background: var(--char);
+  color: var(--bone);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; background: none; border: none; color: inherit; padding: 0; }
+img, svg { display: block; max-width: 100%; }
+h1,h2,h3,h4,h5,p,ul,ol,figure { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+::selection { background: var(--ember); color: #fff; }
+
+/* ---------------- Type primitives ---------------- */
+/* Editorial display (headlines) — swappable fancy face */
+.headline {
+  font-family: var(--headline);
+  font-weight: 600;
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+}
+.headline-it { font-family: var(--headline); font-style: italic; font-weight: 500; line-height: 1; }
+
+/* Condensed display — kickers, labels, BIG NUMERALS only */
+.display {
+  font-family: var(--display);
+  font-weight: 400;
+  line-height: 0.86;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.kicker {
+  font-family: var(--mono);
+  font-size: clamp(11px, 1vw, 13px);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--brass);
+  display: inline-flex; align-items: center; gap: 10px;
+}
+.kicker::before { content: ""; width: 22px; height: 1px; background: var(--brass); opacity: 0.8; }
+.kicker.on-red, .kicker.on-ink { color: var(--brass); }
+.kicker.plain::before { content: none; }
+
+.eyebrow-mono {
+  font-family: var(--mono);
+  font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--bone-soft);
+}
+
+/* Refined signature script — used at most twice (hero + CTA). No comic stroke. */
+.script {
+  font-family: var(--script);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--brass-soft);
+  -webkit-text-stroke: 0;
+  display: inline-block;
+}
+.script.sm, .script.xl { -webkit-text-stroke: 0; }
+.script.cream-fill { color: var(--brass-soft); }
+
+/* ---------------- Buttons (refined: solid ember / hairline ghost) ---------------- */
+.btn {
+  --bg: transparent;
+  display: inline-flex; align-items: center; gap: 12px;
+  padding: 16px 30px 14px;
+  border-radius: 2px;
+  border: 1px solid var(--hair-2);
+  background: var(--bg);
+  color: var(--bone);
+  font-family: var(--display);
+  font-size: 19px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1;
+  transition: background-color .45s var(--ease), color .45s var(--ease),
+              border-color .45s var(--ease), box-shadow .55s var(--ease),
+              transform .55s var(--ease);
+  white-space: nowrap;
+}
+.btn .arrow { font-family: var(--body); font-weight: 600; transition: transform .5s var(--ease); }
+.btn:hover .arrow { transform: translateX(5px); }
+
+/* ghost (default + secondary aliases) */
+.btn:hover { border-color: var(--brass); background: rgba(244,231,214,0.04); }
+.btn.ink, .btn.ghost, .btn.on-ink, .btn.on-red { background: transparent; border-color: var(--hair-2); color: var(--bone); }
+
+/* solid ember primary (legacy .red / .mustard) */
+.btn.red, .btn.mustard { background: var(--ember); border-color: var(--ember); color: #fff; }
+.btn.red:hover, .btn.mustard:hover {
+  background: var(--ember); border-color: var(--ember);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 44px -12px var(--ember-glow), 0 0 0 1px var(--ember);
+}
+.btn.sm { padding: 11px 18px 9px; font-size: 14px; }
+.btn.lg { padding: 19px 38px 16px; font-size: 23px; }
+
+@media (prefers-reduced-motion: reduce) { .btn, .btn .arrow { transition: none; } }
+
+/* ---------------- Chips / tags (hairline, restrained) ---------------- */
+.chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 6px 13px 5px;
+  border: 1px solid var(--hair-2);
+  border-radius: 999px;
+  font-family: var(--display);
+  font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase;
+  background: transparent; color: var(--bone-dim);
+  white-space: nowrap;
+}
+.chip.mustard { color: var(--brass-soft); border-color: var(--hair-2); }
+.chip.red     { color: var(--ember); border-color: rgba(210,70,47,0.5); }
+.chip.gold    { color: var(--char); background: var(--gold); border-color: var(--gold); }
+.chip.on-ink  { color: var(--bone-soft); border-color: var(--hair); }
+
+/* ---------------- Section shell ---------------- */
+.sec { padding: var(--pad-y) var(--pad-x); position: relative; }
+.sec.red   { background: var(--char); color: var(--bone); }   /* dark room, ember added per-section */
+.sec.ink   { background: #0f0c0a; color: var(--bone); }
+.sec.cream { background: var(--char); color: var(--bone); }
+.wrap { max-width: 1200px; margin: 0 auto; }
+
+/* hairline menu divider util */
+.hair-rule { height: 1px; background: var(--hair-2); border: 0; }
+
+/* ---------------- Marquee ---------------- */
+.mq { overflow: hidden; }
+.mq__t { display: flex; gap: 56px; width: max-content; animation: mq 42s linear infinite; }
+.mq.rev .mq__t { animation-direction: reverse; }
+@keyframes mq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ---------------- Scroll reveal (driven by GSAP/ScrollTrigger — see k3-motion.js) ----------------
+   No CSS transition here: the motion is owned by GSAP so the two never fight.
+   The hidden initial state below prevents a flash before ScrollTrigger runs;
+   the fallbacks (reduced motion / tweak off / GSAP missing) snap to visible.   */
+/* Static-parity port: GSAP/ScrollTrigger reveal is reintroduced in Stage 0, so
+   keep .reveal visible at rest (its hidden initial state needs JS to undo). */
+.reveal { opacity: 1; transform: none; }
+.reveal.in { opacity: 1; transform: none; }
+
+/* Fail-safe: if the GSAP CDN never loads, never leave content hidden. */
+html.jd-no-gsap .reveal { opacity: 1; transform: none; }
+html.jd-no-gsap .k3-drawline { transform: scaleX(1); }
+
+body[data-motion="off"] .reveal { opacity: 1; transform: none; }
+body[data-motion="off"] .mq__t { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; }
+  .mq__t { animation: none; }
+}
