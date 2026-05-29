@@ -70,8 +70,8 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={fontVars} data-motion="on">
+    <html lang="en" className={fontVars} suppressHydrationWarning>
+      <body data-motion="on">
         <ThemeProvider
           attribute="class"
           forcedTheme="dark"
