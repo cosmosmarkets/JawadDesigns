@@ -54,8 +54,22 @@ export function SmoothScrollProvider() {
       gsap.ticker.add(tick);
       gsap.ticker.lagSmoothing(0);
 
+      // Stage 1: scroll-tracked candlelight pool (ports k3-atmos.js). Drift the
+      // warm spotlight 30%→64% down the frame so each section passes through the
+      // light rather than sitting in flat fill. quickSetter writes the CSS var
+      // cheaply each frame; reduced motion never reaches here, so --jd-spot-y
+      // holds its static 42% default from k3-pass4-material.css.
+      const setSpot = gsap.quickSetter(root, "--jd-spot-y", "%");
+      const spotlight = ScrollTrigger.create({
+        start: 0,
+        end: "max",
+        onUpdate: (self) => setSpot(30 + self.progress * 34),
+      });
+
       // Cleanup runs when the query stops matching (OS toggle) or on unmount.
       return () => {
+        spotlight.kill();
+        root.style.removeProperty("--jd-spot-y");
         gsap.ticker.remove(tick);
         lenis.destroy();
         lenisRef.current = null;
@@ -83,7 +97,7 @@ export function SmoothScrollProvider() {
                 duration: REVEAL.duration,
                 ease: EASE.reveal,
                 stagger: REVEAL.stagger,
-                overwrite: true,
+                overwrite: "auto",
               }),
           });
         }
@@ -99,7 +113,7 @@ export function SmoothScrollProvider() {
                 duration: 1,
                 ease: EASE.draw,
                 stagger: 0.12,
-                overwrite: true,
+                overwrite: "auto",
               }),
           });
         }
