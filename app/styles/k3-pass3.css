@@ -362,8 +362,11 @@ body:not([data-motion="off"]) .k3-hero--room .k3w { opacity: 0; animation: wordI
 body[data-motion="off"] .k3-hero--room .k3l, body[data-motion="off"] .k3-hero--room .k3w { opacity: 1; transform: none; }
 @media (max-width: 460px) { .k3-hero--room .k3-hero__big { font-size: clamp(80px, 24vw, 128px); } }
 
-/* flat charcoal room + centered spotlight only */
-.k3-hero--room .k3-hero__bloom { display: none; }
+/* flat charcoal room + centered spotlight only. The bloom stays invisible at
+   rest (opacity:0) but layout-inert and animatable — it's absolutely positioned
+   and non-interactive, so it never affects the room, yet GSAP's opacity/scale
+   bloom tween can still render (display:none would have killed the tween). */
+.k3-hero--room .k3-hero__bloom { opacity: 0; pointer-events: none; }
 .k3-hero--room .k3-hero__spot { background: radial-gradient(46% 52% at 50% 40%, rgba(255,236,200,0.09), transparent 72%); }
 .k3-hero--room .k3-hero__cue { color: var(--bone-soft); }
 .k3-hero--room .k3-hero__cue .ar { color: var(--ember); }

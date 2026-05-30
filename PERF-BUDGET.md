@@ -96,3 +96,36 @@ unfold) and Stage 5 (global ticket) will add to home — watch it.
   tile generator: `jawad-designs/gen-paper-fibre.mjs`
 - **SplitText:** confirmed free/working — it's live in the shipped Stage 2 hero + Stage 3 reveals and
   `verify-stage2`/`verify-stage3` pass. No fallback needed (GSAP 3.13+).
+
+---
+
+## Foundation (Stage 0 + 0.5) — 2026-05-30
+
+Route-change motion contract + Stage 3 motion baseline completed on **every** route + Stage 1/2 polish.
+Verified: `verify-stage0` PASS (no ScrollTrigger leak — count 38→38 across 15 navs; scroll +
+`--jd-spot-bias` + `--k3-steam-strength` reset on every route), `verify-stage3` PASS on all 5 routes,
+`verify-stage2` functional invariants pass.
+
+**Bundle (First Load JS) vs Pre-flight baseline:**
+
+| Route | Baseline | Foundation | Δ | Note |
+|---|---|---|---|---|
+| `/` | 149 kB | 149 kB | 0 | unchanged |
+| `/menu` | 96.2 kB | 96.2 kB | 0 | stayed a server component (class-only edits) |
+| `/about` | 96.2 kB | 146 kB | +49.8 | client + GSAP (crest entrance timeline) |
+| `/work` | 96.2 kB | 146 kB | +49.8 | client + GSAP (mockup entrance timeline) |
+| `/contact` | 124 kB | 173 kB | +49 | GSAP (component-owned heading split + card timeline) |
+
+Cumulative added ≈ +50 kB raw (~17 kB gzip) of shared GSAP usage — **within the ≤150 kB gzip budget.**
+**Stage 7 candidate:** dedupe GSAP into a shared chunk so the three client routes don't each carry it
+(the provider already loads GSAP in the layout).
+
+**CLS:**
+- `/contact` **0.49 → 0.006** (desktop), **0.81 → 0.007** (mobile) — the `min-height` + `contain` heading
+  fix eliminated the font-swap reflow. Largest single perf win of the stage.
+- home (~0.12) and `/menu` (~0.16–0.41 mobile) CLS unchanged — pre-existing, NOT Foundation-introduced
+  (a scale *transform* causes no layout shift). Stage 6/7 candidates.
+
+**Known environmental (not regressions):** `verify-stage2`'s WebGL shader-frame check reads 0 frames
+under headless SwiftShader (no GPU), and its fullPage screenshot can time out under SwiftShader — both
+environment limits. The shader code is untouched and the hero renders correctly in screenshots.

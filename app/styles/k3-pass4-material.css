@@ -180,7 +180,9 @@ body[data-grain="off"] .jd-atmos__grain { display: none; }
    candlelight pool, seated on the dark ground */
 .k3-paper {
   --char:#FBEAD0; --char-2:#FFF7E8; --ash:#F2DDBC; --ash-2:#ecd3ad;
-  --bone:#241c14; --bone-dim:#5c5044; --bone-soft:#8a7c6c;
+  /* --bone-soft darkened locally (was #8a7c6c) so captions on the cream stock
+     clear 4.5:1 AA. Scoped to .k3-paper only — the global #a99f92 is untouched. */
+  --bone:#241c14; --bone-dim:#5c5044; --bone-soft:#6b5e4e;
   --hair:rgba(30,18,0,0.12); --hair-2:rgba(165,128,52,0.55);
   --ember:#C03A28; --ember-deep:#8e2618; --ember-glow:rgba(192,58,40,0.3);
   --brass:#9c7a2f; --brass-soft:#7c5f22; --gold:#9c7a2f;

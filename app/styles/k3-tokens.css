@@ -13,6 +13,7 @@
   --bone-dim:  #cdbfae;
   --bone-soft: #a99f92;
   --ember:     #D2462F;   /* the single hot accent */
+  --ember-text:#E0573D;   /* AA text variant of ember (≥4.5:1 on ash panels) */
   --ember-deep:#9e2f1f;
   --ember-glow: rgba(210,70,47,0.45);
   --brass:     #C9A24B;   /* second accent, hairlines, hovers */
@@ -197,7 +198,7 @@ ul, ol { list-style: none; }
    collapsing reveals just before ScrollTrigger animates them in (no flash). */
 .reveal { opacity: 1; transform: none; }
 .reveal.in { opacity: 1; transform: none; }
-html.jd-anim .reveal { opacity: 0; transform: translateY(26px); }
+html.jd-anim .reveal { opacity: 0; transform: translateY(26px) scale(0.98); }
 
 /* Fail-safe: if the GSAP CDN never loads, never leave content hidden. */
 html.jd-no-gsap .reveal { opacity: 1; transform: none; }

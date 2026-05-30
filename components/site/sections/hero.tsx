@@ -37,7 +37,9 @@ export function Hero() {
         tl.set(".k2-hero__ctas > *", { opacity: 0, y: 14 }, 0);
 
         tl
-          // candlelight blooms, the plate settles under it
+          // candlelight blooms (the bloom is opacity:0 + layout-inert at rest in
+          // room mode, so this opacity/scale tween actually renders), the plate
+          // settles under it
           .fromTo(".k3-hero__bloom", { opacity: 0, scale: 0.82 },
             { opacity: 0.9, scale: 1, duration: 1.2, ease: "power2.out" }, 0)
           .fromTo(".k3-plate", { opacity: 0, scale: 0.85, yPercent: 8 },

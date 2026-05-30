@@ -58,6 +58,9 @@ export function SmoothScrollProvider() {
       // (mirrors the hero-shader's __heroFrames dev hook). Never set in prod.
       if (process.env.NODE_ENV !== "production") {
         (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
+        // Stage 0 verify hook: lets verify-stage0 count triggers to prove no
+        // ScrollTrigger leak across repeated route changes. Dev-only.
+        (window as unknown as { __st?: typeof ScrollTrigger }).__st = ScrollTrigger;
       }
 
       const tick = (time: number) => lenis.raf(time * 1000);
@@ -89,6 +92,25 @@ export function SmoothScrollProvider() {
     });
   }, []);
 
+  // 1.5) Route-change reset (Stage 0 multipage motion contract). On navigation,
+  //      snap Lenis to the top and clear the home-only Process atmosphere vars so
+  //      the next route never inherits a biased spotlight or boosted steam. The
+  //      batch effect below already tears down its triggers + re-splits and calls
+  //      ScrollTrigger.refresh() (revertOnUpdate) after the new route settles, so
+  //      this only adds the scroll-to-top + CSS-var reset the contract was missing.
+  //      --jd-spot-y self-corrects: scrollTo(0) updates the persistent spotlight
+  //      trigger back to its top value. Runs always (not gated) so the reset still
+  //      fires under reduced motion, where lenisRef is null and scrollTo no-ops.
+  useGSAP(
+    () => {
+      const root = document.documentElement;
+      lenisRef.current?.scrollTo(0, { immediate: true });
+      root.style.setProperty("--jd-spot-bias", "0%");
+      root.style.setProperty("--k3-steam-strength", "0.8");
+    },
+    { dependencies: [pathname] },
+  );
+
   // 2) Reveal batches + Stage 3 scroll-motion language — rebuilt per route
   //    because `children` changes on nav. Class contracts:
   //      .reveal       — block fade/rise (Stage 0, batch, once)
@@ -114,6 +136,7 @@ export function SmoothScrollProvider() {
               gsap.to(batch, {
                 opacity: 1,
                 y: 0,
+                scale: 1,
                 duration: REVEAL.duration,
                 ease: EASE.reveal,
                 stagger: REVEAL.stagger,
@@ -178,7 +201,11 @@ export function SmoothScrollProvider() {
         // mid-glyph). One refresh after all splits change layout.
         const buildLines = () => {
           if (cancelled) return;
-          gsap.utils.toArray<HTMLElement>(".reveal-lines").forEach((el) => {
+          // `.reveal-lines--local` opts a heading OUT of the global split: it lives
+          // in a heavy client component (e.g. /contact) that hydrates AFTER this
+          // layout-level batch runs, so a global split here would race hydration and
+          // fail. Such headings own their split in their own post-hydration useGSAP.
+          gsap.utils.toArray<HTMLElement>(".reveal-lines:not(.reveal-lines--local)").forEach((el) => {
             const split = SplitText.create(el, { type: "lines", mask: "lines", linesClass: "line" });
             splits.push(split);
             // The pre-paint hide in CSS (html.jd-anim .reveal-lines .line:

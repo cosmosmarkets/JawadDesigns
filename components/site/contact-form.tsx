@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useGSAP } from "@gsap/react";
+import { gsap, SplitText, withMotion } from "@/lib/motion";
 import { TIERS } from "./menu-full";
 
 /* Real /contact page — the replacement for the old order modal. Dish chips mirror
@@ -21,9 +22,58 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 export function ContactForm() {
-  const params = useSearchParams();
-  const initialDish = params.get("dish");
-  const [dish, setDish] = useState(initialDish && DISHES.includes(initialDish) ? initialDish : "");
+  const scope = useRef<HTMLElement>(null);
+  const [dish, setDish] = useState("");
+
+  // Preselect the dish from a ?dish= deep-link in a post-mount effect rather than
+  // useSearchParams(): the hook forces a CSR bailout that defers this client
+  // component's hydration, which races the global SplitText split on the lead h1
+  // (hydration mismatch + a lost masked wipe). Reading after mount keeps hydration
+  // clean, so the reveal-lines wipe runs normally.
+  useEffect(() => {
+    const d = new URLSearchParams(window.location.search).get("dish");
+    if (d && DISHES.includes(d)) setDish(d);
+  }, []);
+
+  // Composed lead entrance. The heading's masked line-wipe is owned HERE (not by
+  // the global batch) because this is a heavy client component that hydrates after
+  // the layout-level batch runs — a global split would race hydration and fail
+  // (the h1 carries `reveal-lines--local` so the global batch skips it). The h1
+  // lines wipe up while the order card — the route's signature element and sole
+  // owner of its transform — ascends and its fields stagger in behind it.
+  // From-states are set at t=0 so nothing flashes before animating. Under reduced
+  // motion the no-preference branch never runs and everything stays at visible rest.
+  useGSAP(
+    () => {
+      return withMotion(() => {
+        const root = scope.current!;
+        const h1 = root.querySelector<HTMLElement>(".jd-contact__h");
+        const card = root.querySelector<HTMLElement>(".jd-contact__card");
+        const fields = card ? gsap.utils.toArray<HTMLElement>(".jd-contact__field", card) : [];
+
+        const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+        let split: SplitText | null = null;
+        if (h1) {
+          // Pin y:0 so yPercent is the sole driver (the CSS pre-paint hide bakes a
+          // pixel y into GSAP's channel otherwise — same fix as the global batch).
+          split = SplitText.create(h1, { type: "lines", mask: "lines", linesClass: "line" });
+          tl.set(split.lines, { yPercent: 110, y: 0 }, 0);
+          tl.to(split.lines, { yPercent: 0, duration: 0.9, stagger: 0.12, ease: "power2.out" }, 0.1);
+        }
+        if (card) {
+          tl.set(card, { opacity: 0, y: 28 }, 0);
+          tl.set(fields, { opacity: 0, y: 16 }, 0);
+          tl
+            .to(card, { opacity: 1, y: 0, duration: 0.9 }, 0.2)
+            .to(fields, { opacity: 1, y: 0, duration: 0.6, stagger: 0.08 }, 0.45);
+        }
+
+        return () => split?.revert();
+      });
+    },
+    { scope },
+  );
 
   const {
     register,
@@ -45,13 +95,15 @@ export function ContactForm() {
   };
 
   return (
-    <section className="sec ink jd-contact" data-screen-label="contact">
+    <section ref={scope} className="sec ink jd-contact" data-screen-label="contact">
       <div className="wrap jd-contact__inner">
         <header className="jd-contact__head reveal">
           <span className="kicker">Contact</span>
-          <h1 className="headline jd-contact__h">Place your order<span style={{ color: "var(--ember)" }}>.</span></h1>
+          <h1 className="headline jd-contact__h reveal-lines reveal-lines--local">Place your order<span style={{ color: "var(--ember)" }}>.</span></h1>
           <p className="jd-contact__sub">Pick a course (optional), leave your email, and tell me what you&apos;re launching. I reply within 24 hours with a plan and a price — one human, no spam.</p>
         </header>
+
+        <div className="k3-hairline" aria-hidden />
 
         <form onSubmit={handleSubmit(onSubmit)} className="jd-contact__card" noValidate>
           <fieldset className="jd-contact__field">

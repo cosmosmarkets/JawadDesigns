@@ -51,15 +51,43 @@
   place-items: center;
   text-align: center;
 }
+/* Signature surface so the placeholder routes (/journal, /work/[slug], not-found)
+   stop reading as flat charcoal: an ember rim-light, a faint printed grain
+   ::before, and a brass letterpress press on the title. */
 .jd-placeholder__inner {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 18px;
+  padding: clamp(40px, 6vw, 72px) clamp(28px, 5vw, 64px);
+  border-radius: 18px;
+  background: linear-gradient(165deg, var(--char-2), var(--char));
+  box-shadow:
+    inset 0 1px 0 rgba(255,168,128,0.32),         /* hot ember top rim    */
+    inset 0 0 56px -30px rgba(255,120,80,0.5),     /* faint inner ember    */
+    inset 0 0 0 1px rgba(201,162,75,0.16),         /* brass letterpress    */
+    0 40px 100px -48px #000,                        /* drop into the room   */
+    0 0 80px -16px var(--ember-glow);               /* caught by candle     */
+}
+.jd-placeholder__inner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='ph'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.06 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23ph)'/%3E%3C/svg%3E");
 }
 .jd-placeholder__title {
   font-size: clamp(40px, 8vw, 92px);
   margin: 6px 0 2px;
+  /* brass letterpress press into the dark stock */
+  text-shadow: 0 1px 0 rgba(255,228,182,0.12), 0 2px 1px rgba(0,0,0,0.55);
 }
 .jd-placeholder__copy {
   color: var(--bone-dim);
@@ -81,12 +109,24 @@
 .jd-contact__h {
   font-size: clamp(44px, 7vw, 84px);
   line-height: 0.95;
+  /* CLS guard: reserve the display heading's box so the Bodoni font-swap can't
+     reflow the page (baseline CLS 0.507 / 0.81 mobile came from this heading).
+     ~1.1em min-height + contain:layout keeps the fallback and Bodoni metrics in
+     the same footprint; the visible design is unchanged. */
+  min-height: 1.1em;
+  contain: layout;
 }
 .jd-contact__sub {
   color: var(--bone-dim);
   max-width: 50ch;
 }
+/* Cinematic surface — mirrors .k3-reserve__card + .k3-paper material: an ember
+   rim-light (inset hot top rim + faint inner ember glow), a brass letterpress
+   hairline, drop into the room, and a low-opacity printed-stock grain ::before.
+   isolate + z-index keep the form fields above the multiply grain. */
 .jd-contact__card {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   gap: 22px;
@@ -94,6 +134,25 @@
   border: 1px solid var(--hair-2);
   border-radius: 18px;
   padding: clamp(24px, 4vw, 40px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,168,128,0.4),          /* hot ember top rim    */
+    inset 0 0 44px -24px rgba(255,120,80,0.6),     /* faint inner ember    */
+    inset 0 0 0 1px rgba(201,162,75,0.18),         /* brass letterpress    */
+    0 34px 96px -42px #000,                         /* drop into the room   */
+    0 0 72px -12px var(--ember-glow);               /* caught by candle     */
+}
+/* faint printed-stock grain, multiplied onto the surface */
+.jd-contact__card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.4;
+  mix-blend-mode: multiply;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.06 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23c)'/%3E%3C/svg%3E");
 }
 .jd-contact__field {
   display: flex;
@@ -123,6 +182,6 @@
   align-self: flex-start;
 }
 .jd-contact__error {
-  color: var(--ember);
+  color: var(--ember-text); /* AA text variant (≥4.5:1) — ember-as-text on the ash card */
   font-size: 14px;
 }

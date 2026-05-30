@@ -71,7 +71,7 @@ export function MenuFull() {
       <section id="why" className="sec ink k2-why" data-screen-label="why-order">
         <header className="wrap k2-why__head reveal">
           <span className="kicker">The menu</span>
-          <h2 className="headline k2-why__title">A short menu, <span>cooked properly.</span></h2>
+          <h2 className="headline reveal-lines k2-why__title">A short menu, <span>cooked properly.</span></h2>
           <p className="k2-why__lede">Two main courses and the seasoning that ties them together. Here, plainly, is what I make.</p>
         </header>
         <ol className="wrap k2-why__menu">
@@ -89,10 +89,12 @@ export function MenuFull() {
         </ol>
       </section>
 
+      <div className="k3-hairline" aria-hidden />
+
       {/* Pricing tiers */}
       <section id="menu" className="k3-light k2-menu" data-screen-label="menu">
         <header className="wrap k2-menu__head reveal">
-          <h2 className="headline k2-menu__title">Three ways <span>to dine.</span></h2>
+          <h2 className="headline reveal-lines k2-menu__title">Three ways <span>to dine.</span></h2>
           <p className="k2-menu__sub">Every option is designed and built by one chef, start to ship. Prices are where the conversation starts.</p>
         </header>
         <div className="wrap k3-paper k3-paper--menu reveal">
@@ -103,7 +105,7 @@ export function MenuFull() {
       {/* Always included */}
       <section id="details" className="k3-light k2-pan2" data-screen-label="pantry">
         <header className="wrap k2-pan2__head reveal">
-          <h2 className="headline k2-pan2__title">What every plate <span>comes with.</span></h2>
+          <h2 className="headline reveal-lines k2-pan2__title">What every plate <span>comes with.</span></h2>
           <p className="k2-pan2__sub">No upsells, no surprises. These aren&apos;t add-ons — they&apos;re the standard.</p>
         </header>
         <div className="wrap k3-paper k2-pan2__list">
