@@ -8,7 +8,7 @@ export function MenuPreview() {
     <section id="menu" className="k3-light k2-menu" data-screen-label="menu">
       <header className="wrap k2-menu__head reveal">
         <span className="kicker">The menu</span>
-        <h2 className="headline k2-menu__title">Three ways <span>to dine.</span></h2>
+        <h2 className="headline k2-menu__title reveal-lines">Three ways <span>to dine.</span></h2>
         <p className="k2-menu__sub">Every option is designed and built by one chef, start to ship. Prices are where the conversation starts.</p>
       </header>
       <TierGrid />

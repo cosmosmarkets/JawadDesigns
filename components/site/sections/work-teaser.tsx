@@ -8,10 +8,10 @@ export function WorkTeaser() {
       <div className="k2-work__dots" aria-hidden="true" />
       <div className="k3-steam" aria-hidden="true"><span /><span /><span /></div>
       <header className="wrap k2-work__head reveal">
-        <h2 className="headline k2-work__title">From the pass.</h2>
+        <h2 className="headline k2-work__title reveal-lines">From the pass.</h2>
       </header>
       <div className="wrap k2-flag reveal">
-        <div className="k2-flag__shot">
+        <div className="k2-flag__shot parallax" data-depth="fg">
           <div className="k2-browser">
             <div className="k2-browser__bar"><span /><span /><span /><em>weldapp.vercel.app</em></div>
             {/* eslint-disable-next-line @next/next/no-img-element -- sized by .k2-browser CSS; next/image wrapper would break the mockup layout */}
@@ -21,7 +21,7 @@ export function WorkTeaser() {
         <div className="k2-flag__body">
           <div className="k2-flag__head">
             <span className="chip gold">Flagship case study</span>
-            <h3 className="headline k2-flag__name">weld.</h3>
+            <h3 className="headline k2-flag__name reveal-lines">weld.</h3>
             <p className="k2-flag__tag">A two-sided marketplace connecting game studios with vetted developers — brand, product design, and a production Next.js build, cooked solo.</p>
           </div>
           <p>200 organic signups, $0 on paid marketing, one chef start to ship. The full story&apos;s on the pass.</p>

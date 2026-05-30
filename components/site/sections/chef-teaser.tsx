@@ -14,7 +14,7 @@ export function ChefTeaser() {
         </Link>
         <div className="k3-chef__body">
           <span className="eyebrow-mono" style={{ color: "var(--brass)" }}>Meet the chef</span>
-          <h2 className="headline k3-chef__h">One chef.<br /><span>One ticket at a time.</span></h2>
+          <h2 className="headline k3-chef__h reveal-lines">One chef.<br /><span>One ticket at a time.</span></h2>
           <p>I&apos;m Jawad — a designer <em>and</em> developer. Every site that leaves this kitchen is cooked by one pair of hands, brief to launch. Taking one project at a time isn&apos;t a limitation — it&apos;s the feature.</p>
           <Link href="/about" className="btn ghost">Meet the chef <span className="arrow">→</span></Link>
         </div>

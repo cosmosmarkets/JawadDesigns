@@ -3,7 +3,7 @@
 /* Home hero — "The Pass": an empty charger under a candlelit pool. On load a
    single GSAP timeline plates the scene — bloom blooms, the plate settles,
    "I serve" rises and "websites." plates letter-by-letter (SplitText masked),
-   then the sub-headline and CTAs. A raw WebGL2 heat-shimmer (HeroShader) sits
+   then the CTAs. A raw WebGL2 heat-shimmer (HeroShader) sits
    behind the plate.
 
    Reduced motion: matchMedia's no-preference branch never runs, so nothing
@@ -53,12 +53,11 @@ export function Hero() {
           .set(".k3-hero__big", { opacity: 1 }, 0.5)
           .to(split ? split.chars : [], { yPercent: 0, stagger: 0.04, duration: 0.72, ease: "power3.out" }, 0.5)
           .fromTo(".k3-hero__dot", { opacity: 0, scale: 0.3, rotation: 90 },
-            { opacity: 1, scale: 1, rotation: 45, transformOrigin: "50% 50%", duration: 0.55, ease: "back.out(2.4)" }, 1.0)
-          // sub-headline + CTAs + cue land last
-          .fromTo(".k3-hero__sub", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.7 }, 1.05)
-          .set(".k2-hero__ctas", { opacity: 1 }, 1.15)
-          .to(".k2-hero__ctas > *", { opacity: 1, y: 0, stagger: 0.1, duration: 0.6 }, 1.15)
-          .fromTo(".k3-hero__cue", { opacity: 0 }, { opacity: 1, duration: 0.6 }, 1.35);
+            { opacity: 1, scale: 1, rotation: 45, x: "-0.22em", y: "0.1em", transformOrigin: "50% 50%", duration: 0.55, ease: "back.out(2.4)" }, 1.0)
+          // CTAs + cue land last
+          .set(".k2-hero__ctas", { opacity: 1 }, 1.05)
+          .to(".k2-hero__ctas > *", { opacity: 1, y: 0, stagger: 0.1, duration: 0.6 }, 1.05)
+          .fromTo(".k3-hero__cue", { opacity: 0 }, { opacity: 1, duration: 0.6 }, 1.25);
 
         // Scroll-out: the plate lifts away and the bloom dims (parallax).
         const out = gsap.timeline({
@@ -105,13 +104,9 @@ export function Hero() {
           </span>
           <span className="k3-hero__big" aria-hidden="true">
             <span className="k3-hero__word">websites</span>
-            <span className="k3-hero__dot">.</span>
+            <span className="k3-hero__dot" aria-hidden="true" />
           </span>
         </h1>
-        <p className="k2-hero__sub k3-hero__sub hero-in">
-          I design and build portfolio sites and landing pages — beautiful, fast,
-          and made to convert.
-        </p>
         <div className="k2-hero__ctas hero-in">
           <Link href="/contact" className="btn red lg">
             Place your order <span className="arrow">→</span>

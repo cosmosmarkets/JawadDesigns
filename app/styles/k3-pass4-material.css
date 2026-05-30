@@ -24,8 +24,10 @@ body[data-contrast="dramatic"]  { --char:#0a0706; --char-2:#120d0b; --ash:#1c161
 /* ---------------- 2 · ATMOSPHERE OVERLAY (grain + vignette + spotlight) ----- */
 :root {
   --jd-spot-y: 42%;            /* vertical centre of the lit pool (scroll-driven) */
+  --jd-spot-bias: 0%;          /* additive per-section shift (Stage 3 Process)    */
   --jd-vign: 0.5;              /* vignette strength      (spotlight tweak)        */
   --jd-spot-strength: 0.9;     /* warm pool strength     (spotlight tweak)        */
+  --k3-steam-strength: 0.8;    /* steam intensity, scrub-driven per course (St 3) */
 }
 body[data-atmos="subtle"]     { --jd-vign: 0.34; --jd-spot-strength: 0.60; }
 body[data-atmos="medium"]     { --jd-vign: 0.50; --jd-spot-strength: 0.90; }
@@ -44,7 +46,7 @@ body[data-atmos="pronounced"] { --jd-vign: 0.72; --jd-spot-strength: 1.00; }
 .jd-atmos__vign {
   mix-blend-mode: multiply;
   opacity: var(--jd-vign);
-  background: radial-gradient(132% 104% at 50% var(--jd-spot-y),
+  background: radial-gradient(132% 104% at 50% calc(var(--jd-spot-y) + var(--jd-spot-bias, 0%)),
               transparent 30%, rgba(26,15,8,0.6) 66%, #140b05 100%);
 }
 
@@ -53,7 +55,7 @@ body[data-atmos="pronounced"] { --jd-vign: 0.72; --jd-spot-strength: 1.00; }
 .jd-atmos__spot {
   mix-blend-mode: screen;
   opacity: var(--jd-spot-strength);
-  background: radial-gradient(48% 42% at 50% var(--jd-spot-y),
+  background: radial-gradient(48% 42% at 50% calc(var(--jd-spot-y) + var(--jd-spot-bias, 0%)),
               rgba(255,226,170,0.13), rgba(255,206,150,0.045) 46%, transparent 72%);
 }
 

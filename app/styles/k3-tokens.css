@@ -209,3 +209,16 @@ body[data-motion="off"] .mq__t { animation: none; }
   .reveal { opacity: 1; transform: none; }
   .mq__t { animation: none; }
 }
+
+/* Stage 3: masked LINE reveal on headings. SplitText (type:"lines", mask:"lines")
+   wraps each line in an overflow:clip mask; the inner .line slides up from below.
+   Visible at rest; the hidden state lives only behind jd-anim, so no-JS /
+   reduced-motion / GSAP-missing show the full heading. */
+html.jd-anim .reveal-lines .line { transform: translateY(110%); }
+html.jd-no-gsap .reveal-lines .line { transform: none; }
+body[data-motion="off"] .reveal-lines .line { transform: none; }
+@media (prefers-reduced-motion: reduce) { .reveal-lines .line { transform: none; } }
+
+/* Stage 3: additive parallax layer — JS writes transform each frame. No at-rest
+   transform so the no-JS layout is never shifted. */
+.parallax { will-change: transform; }

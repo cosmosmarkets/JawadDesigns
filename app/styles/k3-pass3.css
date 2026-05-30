@@ -140,32 +140,54 @@ html.jd-anim .k3-hero__h1::after { animation: none !important; }
 .k2-nav.is-scrolled .k3-mark__badge { width: 38px; height: 38px; transition: width .4s var(--e), height .4s var(--e); }
 .k3-mark__badge, .k3-mark__sub { transition: width .4s var(--e), height .4s var(--e), opacity .4s var(--e); }
 
-/* ============== PROCESS — full-screen pinned scrub ============== */
-.k3-procx { padding: 0; }
-.k3-procx__pin { position: sticky; top: 0; min-height: 100vh; display: flex; align-items: center; padding: clamp(80px,12vh,140px) var(--pad-x) clamp(40px,8vh,90px); overflow: hidden; }
-.k3-procx__head { max-width: 760px; margin: 0 auto clamp(20px,3vh,40px); text-align: center; }
+/* ============== PROCESS — true pinned cinematic scrub (Stage 3) ==============
+   At-rest DEFAULT = static stacked content (no-JS / reduced-motion / mobile):
+   all five courses flow normally and visible. The pin + overlap geometry the
+   scrubbed timeline drives lives behind html.jd-anim (desktop only); the tall
+   section height is set imperatively by process.tsx, so this geometry is inert
+   until then. Pinning is pure CSS position:sticky — the timeline only scrubs. */
+.k3-procx { padding: clamp(80px,12vh,140px) 0; }
+.k3-procx__pin { position: static; min-height: 0; display: block; padding: 0 var(--pad-x); }
+.k3-procx__head { max-width: 760px; margin: 0 auto clamp(28px,4vh,52px); text-align: center; }
 .k3-procx__inner { width: 100%; max-width: 1200px; margin: 0 auto; }
 .k3-procx__title { font-size: clamp(40px,6vw,104px); line-height: 1; }
 .k3-procx__title span { color: var(--ember); }
 .k3-procx__scope { color: var(--bone-dim); max-width: 56ch; margin: 14px auto 0; }
 .k3-procx__scope b { color: var(--bone); }
 .k3-procx__stage { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(28px,5vw,72px); align-items: center; }
-.k3-procx__left { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; }
+.k3-procx__left { display: none; flex-direction: column; gap: 16px; align-items: flex-start; }
 .k3-procx__nowserving { color: var(--brass-soft); }
 .k3-procx__day { font-size: clamp(110px,16vw,240px); line-height: 0.8; color: var(--ember); position: relative;
   text-shadow: 0 2px 0 var(--ember-deep), 0 18px 50px var(--ember-glow); transition: color .5s var(--e); }
 .k3-procx__progress { display: flex; gap: 8px; width: 100%; }
 .k3-procx__pip { flex: 1; height: 6px; border-radius: 999px; background: var(--hair); transition: background-color .5s var(--e), box-shadow .5s var(--e); }
 .k3-procx__pip.on { background: var(--ember); box-shadow: 0 0 14px -2px var(--ember-glow); }
-.k3-procx__courses { position: relative; min-height: clamp(220px,34vh,320px); }
-.k3-course { position: absolute; inset: 0; opacity: 0; transform: translateY(24px); transition: opacity .6s var(--e), transform .6s var(--e); pointer-events: none; }
-.k3-course.on { opacity: 1; transform: none; pointer-events: auto; }
+.k3-procx__courses { position: static; min-height: 0; display: block; }
+.k3-course { position: static; inset: auto; opacity: 1; transform: none; pointer-events: auto; margin-bottom: clamp(40px,8vh,90px); }
+.k3-course:last-child { margin-bottom: 0; }
 .k3-course__day { color: var(--brass-soft); }
 .k3-course__h { font-size: clamp(34px,4vw,68px); margin: 8px 0 14px; }
 .k3-course__p { color: var(--bone-dim); max-width: 50ch; font-size: clamp(16px,1.4vw,20px); }
-.k3-procx .k3-steam { height: 50%; }
-.k3-procx .k3-steam span { background: radial-gradient(circle, rgba(160,120,40,0.14), transparent 65%); }
-@media (max-width: 860px) { .k3-procx__stage { grid-template-columns: 1fr; gap: 18px; } .k3-procx__courses { min-height: 280px; } }
+.k3-procx .k3-steam { display: none; height: 50%; }
+.k3-procx .k3-steam span { background: radial-gradient(circle, rgba(160,120,40,calc(0.14 * var(--k3-steam-strength, .8))), transparent 65%); }
+@media (max-width: 860px) { .k3-procx__stage { grid-template-columns: 1fr; gap: 18px; } }
+
+/* Motion path (DESKTOP ONLY, min-width 721px to match process.tsx's guard):
+   restore the sticky-pin overlap geometry the scrubbed timeline drives. Mobile
+   keeps the static stacked defaults above even with jd-anim present, so the
+   courses are never stranded at opacity:0 on a phone. */
+@media (min-width: 721px) {
+  html.jd-anim .k3-procx { padding: 0; }
+  html.jd-anim .k3-procx__pin { position: sticky; top: 0; min-height: 100vh; display: flex; align-items: center;
+    padding: clamp(80px,12vh,140px) var(--pad-x) clamp(40px,8vh,90px); overflow: hidden; }
+  html.jd-anim .k3-procx__head { margin: 0 auto clamp(20px,3vh,40px); }
+  html.jd-anim .k3-procx__left { display: flex; }
+  html.jd-anim .k3-procx__courses { position: relative; min-height: clamp(220px,34vh,320px); }
+  html.jd-anim .k3-course { position: absolute; inset: 0; opacity: 0; transform: translateY(24px); pointer-events: none; margin-bottom: 0; }
+  html.jd-anim .k3-procx .k3-steam { display: block; }
+}
+@media (min-width: 861px) { html.jd-anim .k3-procx__courses { min-height: clamp(220px,34vh,320px); } }
+@media (min-width: 721px) and (max-width: 860px) { html.jd-anim .k3-procx__courses { min-height: 280px; } }
 
 /* ============== MENU — folded printed card you open ============== */
 .k3-menucard { position: relative; max-width: 1120px; margin: 0 auto; }
@@ -211,12 +233,22 @@ body[data-motion="off"] .k3-menucard__cover { display: none; }
 .k3-drawline.in { transform: scaleX(1); }
 html.jd-anim .k3-drawline { transform: scaleX(0); }
 
+/* Stage 3: scrubbed brass hairline drawn across a section break. Visible at rest
+   (no-JS / reduced-motion); the scrub draws it 0→1 as the break crosses view. */
+.k3-hairline { height: 1px; width: min(1200px, calc(100% - 2 * var(--pad-x))); margin: clamp(20px,6vh,72px) auto;
+  background: linear-gradient(90deg, transparent, var(--brass-soft), transparent); opacity: 0.5;
+  transform: scaleX(1); transform-origin: left center; }
+html.jd-anim .k3-hairline { transform: scaleX(0); }
+html.jd-no-gsap .k3-hairline { transform: scaleX(1); }
+body[data-motion="off"] .k3-hairline { transform: scaleX(1); }
+
 /* ============== REDUCED MOTION / MOTION OFF ============== */
 @media (prefers-reduced-motion: reduce) {
   .plate-word, .k3-hero__rule, .k3-hero__bloom, .k3-hero__h1::after { animation: none !important; opacity: 1 !important; transform: none !important; }
   .k3-steam, .k3-hero__cue .ar { animation: none !important; }
   .k3-docket { transition: none; }
   .k3-drawline { transform: scaleX(1); }
+  .k3-hairline { transform: scaleX(1); }
 }
 body[data-motion="off"] .k3-steam span, body[data-motion="off"] .k3-hero__bloom, body[data-motion="off"] .k3-hero__cue .ar { animation: none !important; opacity: 0 !important; }
 body[data-motion="off"] .k3-hero__rule { transform: scaleX(1); }
@@ -228,6 +260,9 @@ html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
 .lenis.lenis-stopped { overflow: hidden; }
 .lenis.lenis-smooth iframe { pointer-events: none; }
+
+html.jd-nav-open,
+html.jd-nav-open body { overflow: hidden; }
 
 /* =======================================================================
    HERO v2 — clean plated dish on a whiteboard grid, massive layered type
@@ -289,19 +324,20 @@ html.lenis, html.lenis body { height: auto; }
    HERO v3 — dark room, heavy condensed 3D beveled type, letters build in
    ======================================================================= */
 .k3-hero--room { background: var(--char); color: var(--bone); }
-.k3-hero--room .k2-hero__inner { z-index: 5; position: relative; }
-.k3-hero--room .k3-hero__h1 { display: flex; flex-direction: column; align-items: center; line-height: 0.84; perspective: 900px; }
+.k3-hero--room .k2-hero__inner { z-index: 5; position: relative; gap: clamp(28px, 4vw, 48px); }
+.k3-hero--room .k3-hero__h1 { display: flex; flex-direction: column; align-items: center; line-height: 0.82; perspective: 900px;
+  gap: clamp(4px, 1vw, 12px); margin-bottom: clamp(8px, 2vw, 20px); }
 
 /* "I serve" — editorial serif italic, settles in as words */
 .k3-hero--room .k3-hero__top { font-family: var(--headline); font-style: italic; font-weight: 500;
-  font-size: clamp(40px,8vw,132px); color: var(--bone); margin-bottom: -0.04em;
+  font-size: clamp(48px, 10vw, 148px); color: var(--bone); margin-bottom: -0.02em;
   text-shadow: 0 2px 24px rgba(0,0,0,0.5); }
 .k3-hero--room .k3w { display: inline-block; }
 
 /* "websites." — heavy condensed, beveled + extruded 3D */
-.k3-hero--room .k3-hero__big { display: flex; justify-content: center; flex-wrap: nowrap;
+.k3-hero--room .k3-hero__big { display: inline-flex; align-items: flex-end; justify-content: center; flex-wrap: nowrap;
   font-family: var(--display); font-weight: 400; text-transform: uppercase;
-  font-size: clamp(82px,22vw,392px); line-height: 0.8; letter-spacing: 0.005em; }
+  font-size: clamp(104px, 30vw, 460px); line-height: 0.76; letter-spacing: 0.005em; }
 .k3-hero--room .k3l {
   display: inline-block; color: #f6ead7;
   text-shadow:
@@ -314,37 +350,35 @@ html.lenis, html.lenis body { height: auto; }
     5px 12px 16px rgba(0,0,0,0.6),
     0 0 34px rgba(210,70,47,0.28);
 }
-.k3-hero--room .k3-hero__dot { color: var(--ember);
-  text-shadow: 0 2px 0 var(--ember-deep), 0 5px 0 #5f1c12, 5px 12px 16px rgba(0,0,0,0.6), 0 0 30px var(--ember-glow); }
+/* diamond period: ember square rotated 45° — tuck beside the baseline after "S" */
+.k3-hero--room .k3-hero__dot {
+  display: inline-block; flex-shrink: 0;
+  width: 0.1em; height: 0.1em;
+  margin-left: 0.04em; margin-bottom: 0.02em;
+  background: var(--ember);
+  box-shadow: 0 2px 0 var(--ember-deep), 0 5px 0 #5f1c12, 5px 12px 16px rgba(0,0,0,0.6), 0 0 30px var(--ember-glow);
+  transform: rotate(45deg) translate(-0.22em, 0.1em); transform-origin: 50% 50%; }
+body:not([data-motion="off"]) .k3-hero--room .k3-hero__dot { animation: dotIn .7s var(--e-out) forwards; }
+@keyframes dotIn { from { opacity: 0; transform: rotate(45deg) translate(-0.22em, 0.45em) scale(0.6); } to { opacity: 1; transform: rotate(45deg) translate(-0.22em, 0.1em); } }
+body[data-motion="off"] .k3-hero--room .k3-hero__dot { transform: rotate(45deg) translate(-0.22em, 0.1em); opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .k3-hero--room .k3-hero__dot { transform: rotate(45deg) translate(-0.22em, 0.1em) !important; opacity: 1 !important; animation: none !important; } }
 
-/* build-in animations */
+/* build-in animations (legacy CSS path — GSAP owns the live hero) */
 body:not([data-motion="off"]) .k3-hero--room .k3l { opacity: 0; transform-origin: 50% 100%; animation: letterIn .7s var(--e-out) forwards; }
 body:not([data-motion="off"]) .k3-hero--room .k3w { opacity: 0; animation: wordIn .8s var(--e-out) forwards; }
 @keyframes letterIn { from { opacity: 0; transform: rotateX(-88deg) translateY(0.35em); } to { opacity: 1; transform: none; } }
 @keyframes wordIn { from { opacity: 0; transform: translateY(0.5em); } to { opacity: 1; transform: none; } }
-
-.k3-hero--room .k2-hero__sub { color: var(--bone-dim); font-weight: 400; margin-top: clamp(18px,2.4vw,30px); }
-.k3-hero--room .k3-hero__cue { color: var(--bone-soft); }
-.k3-hero--room .k3-hero__cue .ar { color: var(--ember); }
-
 @media (prefers-reduced-motion: reduce) {
   .k3-hero--room .k3l, .k3-hero--room .k3w { opacity: 1 !important; transform: none !important; animation: none !important; }
 }
 body[data-motion="off"] .k3-hero--room .k3l, body[data-motion="off"] .k3-hero--room .k3w { opacity: 1; transform: none; }
-@media (max-width: 460px) { .k3-hero--room .k3-hero__big { font-size: 64px; } }
+@media (max-width: 460px) { .k3-hero--room .k3-hero__big { font-size: clamp(80px, 24vw, 128px); } }
 
-/* fix: kill the right-side glow (flat charcoal + centered spotlight only) + diamond period */
-.k3-hero--room .k3-hero__bg { background: var(--char); }
+/* flat charcoal room + centered spotlight only */
 .k3-hero--room .k3-hero__bloom { display: none; }
 .k3-hero--room .k3-hero__spot { background: radial-gradient(46% 52% at 50% 40%, rgba(255,236,200,0.09), transparent 72%); }
-/* diamond period: a punctuation accent, not a slab — give it air after the "S"
-   and sit it down near the baseline (the glyph box is full line-height). */
-.k3-hero--room .k3-hero__dot { transform: rotate(45deg); transform-origin: 50% 50%;
-  align-self: flex-end; margin-left: 0.07em; margin-bottom: 0.1em; font-size: 0.82em; }
-body:not([data-motion="off"]) .k3-hero--room .k3-hero__dot { animation: dotIn .7s var(--e-out) forwards; }
-@keyframes dotIn { from { opacity: 0; transform: rotate(45deg) translateY(0.35em) scale(0.6); } to { opacity: 1; transform: rotate(45deg); } }
-body[data-motion="off"] .k3-hero--room .k3-hero__dot { transform: rotate(45deg); opacity: 1; }
-@media (prefers-reduced-motion: reduce) { .k3-hero--room .k3-hero__dot { transform: rotate(45deg) !important; opacity: 1 !important; animation: none !important; } }
+.k3-hero--room .k3-hero__cue { color: var(--bone-soft); }
+.k3-hero--room .k3-hero__cue .ar { color: var(--ember); }
 
 /* nuke every hero overlay/pseudo so nothing casts a panel or gradient over the type */
 .k3-hero--room { background: var(--char); }
@@ -355,19 +389,26 @@ body[data-motion="off"] .k3-hero--room .k3-hero__dot { transform: rotate(45deg);
 .k3-hero--room::after { display: none !important; content: none !important; }
 
 /* ===== mobile nav burger + drawer ===== */
-.k3-burger { display: none; flex-direction: column; gap: 5px; padding: 10px; justify-self: end; }
+.k3-burger { display: none; flex-direction: column; gap: 5px; padding: 10px; justify-self: end; flex-shrink: 0; }
 .k3-burger span { width: 24px; height: 2px; background: var(--bone); display: block; border-radius: 2px; }
 @media (max-width: 860px) {
-  .k2-nav { grid-template-columns: auto 1fr; }
+  .k2-nav {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
   .k2-nav__links, .k2-nav__cta { display: none; }
+  .k3-mark { min-width: 0; }
   .k3-burger { display: flex; }
 }
-.k3-drawer { position: fixed; inset: 0; z-index: 80; background: rgba(16,13,11,0.98);
+.k3-drawer { position: fixed; inset: 0; z-index: 80; min-height: 100vh; min-height: 100dvh;
+  background: rgba(16,13,11,0.98);
   -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
   opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .4s var(--e), visibility .4s var(--e);
-  display: flex; flex-direction: column; padding: 22px var(--pad-x) 40px; }
+  display: flex; flex-direction: column;
+  overflow-y: auto; overflow-x: clip; overscroll-behavior: contain; touch-action: pan-y;
+  padding: max(22px, env(safe-area-inset-top, 0px)) var(--pad-x) max(40px, env(safe-area-inset-bottom, 0px)); }
 .k3-drawer.open { opacity: 1; visibility: visible; pointer-events: auto; }
-.k3-drawer__links a { transition: transform .45s var(--e-out), opacity .45s var(--e-out); transform: translateX(18px); opacity: 0; }
+.k3-drawer__links a { transition: transform .45s var(--e-out), opacity .45s var(--e-out); transform: translateX(8px); opacity: 0; }
 .k3-drawer.open .k3-drawer__links a { transform: none; opacity: 1; }
 .k3-drawer__top { display: flex; justify-content: space-between; align-items: center; }
 .k3-drawer__top .k3-mark__name { font-size: 22px; color: var(--bone); }

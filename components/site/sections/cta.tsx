@@ -12,7 +12,7 @@ export function Cta() {
           <span className="k3-reserve__corner k3-reserve__corner--tl" aria-hidden="true" />
           <span className="k3-reserve__corner k3-reserve__corner--br" aria-hidden="true" />
           <span className="script xl k3-reserve__script">Ready to order?</span>
-          <h2 className="headline k3-reserve__h">Reserve your seat<span className="k3-hero__dot">.</span></h2>
+          <h2 className="headline k3-reserve__h reveal-lines">Reserve your seat<span className="k3-hero__dot">.</span></h2>
           <div className="k3-reserve__rows">
             <div className="k3-reserve__row"><span className="eyebrow-mono">Reservation</span><span className="k3-reserve__v">No. 002</span></div>
             <div className="k3-reserve__row"><span className="eyebrow-mono">Table</span><span className="k3-reserve__v">01 — for one</span></div>

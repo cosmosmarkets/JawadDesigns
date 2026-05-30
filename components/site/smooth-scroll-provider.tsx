@@ -27,11 +27,13 @@ import Lenis from "lenis";
 import {
   gsap,
   ScrollTrigger,
+  SplitText,
   EASE,
   REVEAL,
   LENIS_CONFIG,
   withMotion,
 } from "@/lib/motion";
+import { registerLenis } from "@/lib/scroll-lock";
 
 export function SmoothScrollProvider() {
   const pathname = usePathname();
@@ -49,7 +51,14 @@ export function SmoothScrollProvider() {
 
       const lenis = new Lenis(LENIS_CONFIG);
       lenisRef.current = lenis;
+      registerLenis(lenis);
       lenis.on("scroll", ScrollTrigger.update);
+
+      // Dev-only handle so verification can drive scroll deterministically
+      // (mirrors the hero-shader's __heroFrames dev hook). Never set in prod.
+      if (process.env.NODE_ENV !== "production") {
+        (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
+      }
 
       const tick = (time: number) => lenis.raf(time * 1000);
       gsap.ticker.add(tick);
@@ -74,15 +83,29 @@ export function SmoothScrollProvider() {
         gsap.ticker.remove(tick);
         lenis.destroy();
         lenisRef.current = null;
+        registerLenis(null);
         root.classList.remove("jd-anim");
       };
     });
   }, []);
 
-  // 2) Reveal batch — rebuilt per route because `children` changes on nav.
+  // 2) Reveal batches + Stage 3 scroll-motion language — rebuilt per route
+  //    because `children` changes on nav. Class contracts:
+  //      .reveal       — block fade/rise (Stage 0, batch, once)
+  //      .k3-drawline  — one-shot hairline draw (Stage 0, batch, once)
+  //      .reveal-lines — masked line wipe on a heading (Stage 3, SplitText)
+  //      .parallax     — additive y depth, scrubbed (Stage 3, desktop only)
+  //      .k3-hairline  — scrubbed brass hairline across a section break (Stage 3)
   useGSAP(
     () => {
       return withMotion(() => {
+        // SplitText mutates the DOM and is NOT auto-reverted by the useGSAP
+        // context; track every split + the triggers we build asynchronously so
+        // the cleanup below can tear them down on route change / unmount.
+        const splits: SplitText[] = [];
+        const triggers: ScrollTrigger[] = [];
+        let cancelled = false;
+
         if (gsap.utils.toArray(".reveal").length) {
           ScrollTrigger.batch(".reveal", {
             start: "top 88%",
@@ -115,8 +138,86 @@ export function SmoothScrollProvider() {
           });
         }
 
-        // Positions depend on fonts/images that may settle after mount.
-        ScrollTrigger.refresh();
+        // Parallax depth — desktop only (skip the work on touch/mobile for fps).
+        const allowParallax = !window.matchMedia("(max-width: 720px)").matches;
+        const DEPTH: Record<string, number> = { bg: 44, mid: 26, fg: -30 };
+        if (allowParallax) {
+          gsap.utils.toArray<HTMLElement>(".parallax").forEach((el) => {
+            const attr = el.dataset.depth || "mid";
+            const px = DEPTH[attr] ?? (parseFloat(attr) || 0);
+            if (!px) return;
+            const setY = gsap.quickSetter(el, "y", "px") as (v: number) => void;
+            triggers.push(
+              ScrollTrigger.create({
+                trigger: el,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: true,
+                onUpdate: (self) => setY((self.progress - 0.5) * px),
+              }),
+            );
+          });
+        }
+
+        // Scrubbed brass hairline across section breaks.
+        gsap.utils.toArray<HTMLElement>(".k3-hairline").forEach((el) => {
+          const setScale = gsap.quickSetter(el, "scaleX") as (v: number) => void;
+          triggers.push(
+            ScrollTrigger.create({
+              trigger: el,
+              start: "top 95%",
+              end: "top 62%",
+              scrub: true,
+              onUpdate: (self) => setScale(self.progress),
+            }),
+          );
+        });
+
+        // Masked line reveals — split AFTER fonts settle (Bodoni Moda loads
+        // display:swap; splitting early wraps lines wrong and clips the mask
+        // mid-glyph). One refresh after all splits change layout.
+        const buildLines = () => {
+          if (cancelled) return;
+          gsap.utils.toArray<HTMLElement>(".reveal-lines").forEach((el) => {
+            const split = SplitText.create(el, { type: "lines", mask: "lines", linesClass: "line" });
+            splits.push(split);
+            // The pre-paint hide in CSS (html.jd-anim .reveal-lines .line:
+            // translateY(110%)) prevents a FOUC before this split runs, but GSAP
+            // parses that computed translate into its pixel `y` channel. If we
+            // only animate `yPercent`, that inherited `y` stays baked in and the
+            // line never returns to the baseline. Pin `y:0` here so yPercent is
+            // the sole driver of the wipe.
+            gsap.set(split.lines, { yPercent: 110, y: 0 });
+            triggers.push(
+              ScrollTrigger.create({
+                trigger: el,
+                start: "top 85%",
+                once: true,
+                onEnter: () =>
+                  gsap.to(split.lines, {
+                    yPercent: 0,
+                    duration: 0.9,
+                    ease: EASE.reveal,
+                    stagger: 0.12,
+                  }),
+              }),
+            );
+          });
+          // Positions depend on fonts/images/splits that settle after mount.
+          ScrollTrigger.refresh();
+        };
+
+        if (typeof document !== "undefined" && document.fonts?.ready) {
+          document.fonts.ready.then(buildLines);
+        } else {
+          buildLines();
+        }
+
+        return () => {
+          cancelled = true;
+          triggers.forEach((t) => t.kill());
+          splits.forEach((s) => s.revert());
+        };
       });
     },
     { dependencies: [pathname], revertOnUpdate: true },

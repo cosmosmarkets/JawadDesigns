@@ -16,7 +16,7 @@ export function Trust() {
         {claims.map((c, i) => (
           <article key={i} className={"k2-claim reveal d" + i}>
             <span className="k3-drawline reveal k2-claim__line" />
-            <h3 className="headline k2-claim__h">
+            <h3 className="headline k2-claim__h reveal-lines">
               {c.h}
               <br />
               <span className="k2-claim__h2">{c.h2}</span>

@@ -18,8 +18,10 @@ export function Home() {
       <Hero />
       <Trust />
       <WorkTeaser />
+      <div className="k3-hairline" aria-hidden />
       <ChefTeaser />
       <MenuPreview />
+      <div className="k3-hairline" aria-hidden />
       <Process />
       <Guestbook />
       <Cta />
