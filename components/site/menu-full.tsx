@@ -95,7 +95,9 @@ export function MenuFull() {
           <h2 className="headline k2-menu__title">Three ways <span>to dine.</span></h2>
           <p className="k2-menu__sub">Every option is designed and built by one chef, start to ship. Prices are where the conversation starts.</p>
         </header>
-        <TierGrid />
+        <div className="wrap k3-paper k3-paper--menu reveal">
+          <TierGrid />
+        </div>
       </section>
 
       {/* Always included */}
@@ -104,7 +106,7 @@ export function MenuFull() {
           <h2 className="headline k2-pan2__title">What every plate <span>comes with.</span></h2>
           <p className="k2-pan2__sub">No upsells, no surprises. These aren&apos;t add-ons — they&apos;re the standard.</p>
         </header>
-        <div className="wrap k2-pan2__list">
+        <div className="wrap k3-paper k2-pan2__list">
           {PANTRY.map((it, i) => (
             <div key={it.h} className={"k2-pan2__row reveal d" + (i % 3)}>
               <span className="display k2-pan2__no">{String(i + 1).padStart(2, "0")}</span>

@@ -11,7 +11,9 @@ export function MenuPreview() {
         <h2 className="headline k2-menu__title reveal-lines">Three ways <span>to dine.</span></h2>
         <p className="k2-menu__sub">Every option is designed and built by one chef, start to ship. Prices are where the conversation starts.</p>
       </header>
-      <TierGrid />
+      <div className="wrap k3-paper k3-paper--menu reveal">
+        <TierGrid />
+      </div>
       <div className="wrap k2-menu__more reveal">
         <Link href="/menu" className="btn red lg">See the full menu <span className="arrow">→</span></Link>
         <span className="eyebrow-mono k2-menu__morenote">Services, courses &amp; what every plate includes</span>

@@ -154,3 +154,177 @@ body[data-grain="off"] .jd-atmos__grain { display: none; }
   border-bottom: 1px solid rgba(201,162,75,0.26);
 }
 .k2-browser__bar em { color: var(--brass-soft); opacity: 0.8; }
+
+/* ============================================================================
+   STAGE 3.5 — Material visibility & tonal unification (appended; loads last so
+   these override the rules above by cascade). Tuning + containment only:
+   no palette-token changes, no copy/layout-structure changes, no motion rebuild.
+   ========================================================================== */
+
+/* --- 3.5·1  Cream is no longer a full-bleed ground -------------------------
+   .k3-light used to repaint the whole section cream. Reset it to the dark room
+   register (tokens inherit the contrast-correct values from <body>), so any
+   section that still carries .k3-light reads as dark with legible cream text.
+   The cream surface now lives ONLY inside .k3-paper (a contained printed prop). */
+.k3-light {
+  --char: inherit; --char-2: inherit; --ash: inherit; --ash-2: inherit;
+  --bone: inherit; --bone-dim: inherit; --bone-soft: inherit;
+  --hair: inherit; --hair-2: inherit;
+  --ember: inherit; --ember-deep: inherit; --ember-glow: inherit;
+  --brass: inherit; --brass-soft: inherit; --gold: inherit;
+  background: var(--char);
+  background-image: none;
+}
+
+/* the contained cream paper prop — a printed card/menu/ticket caught in the
+   candlelight pool, seated on the dark ground */
+.k3-paper {
+  --char:#FBEAD0; --char-2:#FFF7E8; --ash:#F2DDBC; --ash-2:#ecd3ad;
+  --bone:#241c14; --bone-dim:#5c5044; --bone-soft:#8a7c6c;
+  --hair:rgba(30,18,0,0.12); --hair-2:rgba(165,128,52,0.55);
+  --ember:#C03A28; --ember-deep:#8e2618; --ember-glow:rgba(192,58,40,0.3);
+  --brass:#9c7a2f; --brass-soft:#7c5f22; --gold:#9c7a2f;
+  position: relative; isolation: isolate;
+  color: var(--bone);
+  border-radius: 14px;
+  padding: clamp(28px,4vw,56px);
+  background:
+    radial-gradient(120% 90% at 30% 0, rgba(255,255,255,0.5), transparent 55%),
+    linear-gradient(168deg,#FFF7E8,#F3E0BD);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.6),        /* top sheen        */
+    inset 0 0 0 1px rgba(156,122,47,0.32),       /* brass hairline   */
+    0 40px 90px -42px rgba(0,0,0,0.78),          /* drop into room   */
+    0 0 64px -24px rgba(255,200,140,0.30);       /* caught by candle */
+}
+/* faint printed-stock grain on the card */
+.k3-paper::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit;
+  pointer-events: none; opacity: 0.5; mix-blend-mode: multiply;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.15 0 0 0 0 0.1 0 0 0 0 0 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+}
+.k3-paper--menu  { max-width: 1160px; margin-inline: auto; }
+.k3-paper--guest { max-width: 760px;  margin-inline: auto; text-align: center; }
+
+/* Process: the pinned recipe card. The cream lives on __inner (inside the
+   sticky pin), never on the tall outer section. */
+.k3-procx .k3-procx__inner.k3-paper {
+  max-width: 1040px;
+  padding: clamp(30px,4vw,60px) clamp(26px,4vw,60px);
+}
+
+/* --- 3.5·2  Raise the material to visible ---------------------------------- */
+/* deeper warm-biased blacks */
+body[data-contrast="dramatic"] { --char:#0a0605; --char-2:#130d0a; --ash:#1d1611; --ash-2:#261c15; }
+/* push the atmosphere up */
+body[data-atmos="pronounced"]  { --jd-vign: 0.78; --jd-spot-strength: 1.05; }
+
+/* tighten the candlelight pool: smaller radius, higher centre alpha, harder
+   falloff — it sculpts instead of washing. (KEEP the --jd-spot-bias term —
+   verify-stage3 asserts it changes across the Process scrub.) */
+.jd-atmos__spot {
+  background: radial-gradient(34% 30% at 50% calc(var(--jd-spot-y) + var(--jd-spot-bias, 0%)),
+              rgba(255,224,168,0.22), rgba(255,200,140,0.06) 40%, transparent 60%);
+}
+.jd-atmos__vign {
+  background: radial-gradient(120% 96% at 50% calc(var(--jd-spot-y) + var(--jd-spot-bias, 0%)),
+              transparent 22%, rgba(26,15,8,0.66) 60%, #120a04 100%);
+}
+
+/* a little more ember rim — restrained, directional, on active edges only */
+.k2-tier:hover {
+  box-shadow: 0 30px 60px -34px rgba(0,0,0,0.6), 0 0 40px -16px var(--ember-glow);
+}
+.k2-flag__shot .k2-browser {
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.5),
+    0 44px 96px -42px rgba(0,0,0,0.88),
+    0 0 60px -14px var(--ember-glow);
+}
+
+/* brass letterpress perceptible at 1x (accents only — body copy untouched) */
+.sec { box-shadow: 0 1px 0 rgba(255,236,205,0.09); }
+.k2-trust__mq { box-shadow: inset 0 1px 0 rgba(255,236,205,0.10), inset 0 -1px 0 rgba(0,0,0,0.45); }
+
+/* --- 3.5·3  Hero readability (cosmetic only; no timeline/shader/aria change) */
+/* tighten the hero pool so the charger plate separates from black */
+.k3-hero__spot {
+  background: radial-gradient(40% 46% at 50% 40%, rgba(255,236,200,0.14), transparent 64%);
+}
+/* give the plate rim a real bone/brass specular catch */
+.k3-plate__rim {
+  box-shadow:
+    inset 0 0 0 1px rgba(201,162,75,0.6),
+    inset 0 2px 0 0 rgba(255,244,222,0.5),       /* bone specular top edge */
+    inset 0 3px 18px -5px rgba(255,210,150,0.36);
+}
+/* "WEBSITES": drop the diffuse 34px ember halo (the RGB-split look); commit a
+   tight warm-over-dark letterpress consistent with the extruded stack */
+.k3-hero--room .k3l {
+  text-shadow:
+    0 -1px 0 #fffaf0, 0 1px 0 #b7a081, 1px 2px 0 #8a7257,
+    2px 4px 0 #5f4d39, 3px 6px 0 #3c3025, 4px 8px 0 #2a2019,
+    5px 12px 16px rgba(0,0,0,0.6),
+    0 1px 0 rgba(255,150,110,0.45),               /* tight warm top kiss (1px)   */
+    0 2px 1px rgba(120,30,15,0.55);               /* warm-over-dark press  (2px) */
+}
+
+/* --- 3.5·4  Warm the weld screenshot (prop in the room, not a cold window) - */
+.k2-browser { position: relative; }
+.k2-browser img { position: relative; z-index: 0; }
+.k2-browser::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; top: 38px; /* clear the chrome bar */
+  z-index: 1; pointer-events: none; mix-blend-mode: multiply;
+  border-radius: 0 0 10px 10px;
+  background:
+    linear-gradient(180deg, rgba(60,28,16,0) 0%, rgba(54,26,14,0.30) 78%, rgba(38,16,8,0.52) 100%),
+    linear-gradient(115deg, rgba(210,70,47,0.12), rgba(22,18,16,0.20) 60%);
+}
+
+/* --- 3.5·5  Chef brass crest (replaces the COMING SOON placeholder) -------- */
+.k3-chef__crest {
+  position: relative; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  aspect-ratio: 4/5; border-radius: 14px;
+  background: radial-gradient(120% 90% at 50% 18%, #241a15, #14100d 70%);
+  box-shadow:
+    inset 0 0 0 1px var(--hair-2),
+    inset 0 1px 0 rgba(255,210,150,0.12),
+    0 40px 90px -46px #000,
+    0 0 70px -30px var(--ember-glow);
+}
+.k3-crest { position: relative; display: flex; flex-direction: column; align-items: center; }
+.k3-crest__svg { width: clamp(150px,18vw,220px); height: auto; display: block; }
+.k3-crest__ring { fill: none; stroke: var(--brass); stroke-width: 1.5; opacity: 0.85; }
+.k3-crest__ring--inner { stroke: var(--brass-soft); stroke-width: 1; opacity: 0.5; }
+.k3-crest__j {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -58%);
+  font-style: italic; font-size: clamp(58px,7vw,96px); line-height: 1; color: var(--gold);
+  text-shadow: 0 1px 1px rgba(0,0,0,0.6), 0 -1px 0 rgba(255,228,182,0.22); /* embossed brass */
+}
+.k3-crest__cap { color: var(--bone-soft); letter-spacing: 0.22em; margin-top: 16px; }
+
+/* --- 3.5·6  Trust + Guestbook cream paper props + Trust numeral anchor ----- */
+.k2-trust { position: relative; }
+.k2-trust__grid, .k2-trust__mq { position: relative; z-index: 1; }
+.k2-trust__numeral {
+  position: absolute; right: -2vw; top: 50%; transform: translateY(-50%);
+  font-family: var(--display); font-size: clamp(220px,34vw,560px); line-height: 0.8;
+  color: transparent; -webkit-text-stroke: 1px rgba(201,162,75,0.16);
+  pointer-events: none; z-index: 0;
+}
+.k3-paper--ticket {
+  position: absolute; left: clamp(8px,3vw,48px); bottom: clamp(8px,4vh,56px);
+  width: clamp(190px,20vw,250px); padding: 16px 18px 18px; z-index: 0;
+  transform: rotate(-3deg);
+}
+.k3-ticket__hd { display: flex; justify-content: space-between; font-family: var(--mono);
+  font-size: 11px; letter-spacing: 0.14em; color: var(--bone-dim); }
+.k3-ticket__rule { height: 0; border-top: 1px dashed var(--hair-2); margin: 12px 0; }
+.k3-ticket__big { font-family: var(--display); font-size: 30px; line-height: 0.9; color: var(--bone); }
+.k3-ticket__sm { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; color: var(--bone-soft); }
+@media (max-width: 900px) { .k3-paper--ticket { display: none; } }
+
+/* Guestbook signed card edge replaces the old hairline borders */
+.k2-guest__inner.k3-paper { border-top: 0; border-bottom: 0; padding: clamp(30px,4vw,52px); }

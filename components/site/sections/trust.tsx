@@ -9,6 +9,16 @@ export function Trust() {
   const track = [...mq, ...mq];
   return (
     <section id="trust" className="sec cream k2-trust" data-screen-label="trust">
+      <span className="k2-trust__numeral" aria-hidden="true">03</span>
+      <div className="k3-paper k3-paper--ticket" aria-hidden="true">
+        <div className="k3-ticket__hd">
+          <span>TABLE 01</span>
+          <span>GUEST CHECK</span>
+        </div>
+        <div className="k3-ticket__rule" />
+        <div className="k3-ticket__big">Party of one</div>
+        <div className="k3-ticket__sm">Served daily</div>
+      </div>
       <div className="k2-trust__mq mq" aria-hidden="true">
         <div className="mq__t">{track.map((t, i) => <span key={i} className="display k2-trust__mqitem">{t}</span>)}</div>
       </div>

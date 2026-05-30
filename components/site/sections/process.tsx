@@ -136,7 +136,7 @@ export function Process() {
     <section id="process" ref={secRef} className="k3-light k3-procx" data-screen-label="process">
       <div className="k3-procx__pin">
         <div className="k3-steam" aria-hidden="true"><span /><span /><span /></div>
-        <div className="k3-procx__inner">
+        <div className="k3-procx__inner k3-paper">
           <header className="k3-procx__head reveal">
             <h2 className="headline k3-procx__title reveal-lines">Five courses. <span>Five days.</span></h2>
             <p className="k3-procx__scope">Each engagement is a finished site — designed, built in Next.js, and <b>shipped</b>. Copy direction, defined revision rounds, a clean handoff. Five days to <b>live</b>, not five weeks to a mockup.</p>
