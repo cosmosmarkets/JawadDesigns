@@ -16,6 +16,7 @@ import { Atmosphere } from "@/components/site/atmosphere";
 import { Nav } from "@/components/site/nav";
 import { Footer } from "@/components/site/footer";
 import { SmoothScrollProvider } from "@/components/site/smooth-scroll-provider";
+import { Analytics } from "@vercel/analytics/next";
 
 const bodoni = Bodoni_Moda({
   subsets: ["latin"],
@@ -99,6 +100,7 @@ export default function RootLayout({
           <Footer />
           <Atmosphere />
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
