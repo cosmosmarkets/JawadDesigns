@@ -2,9 +2,8 @@
 
 /* Home hero — "The Pass": an empty charger under a candlelit pool. On load a
    single GSAP timeline plates the scene — bloom blooms, the plate settles,
-   "I serve" rises and "websites." plates letter-by-letter (SplitText masked),
-   then the CTAs. A raw WebGL2 heat-shimmer (HeroShader) sits
-   behind the plate.
+   "I serve" rises and "websites" plates letter-by-letter (SplitText masked),
+   then the CTAs. A raw WebGL2 heat-shimmer (HeroShader) sits behind the plate.
 
    Reduced motion: matchMedia's no-preference branch never runs, so nothing
    animates and the .hero-in elements stay visible at rest (the html.jd-anim
@@ -35,7 +34,6 @@ export function Hero() {
         // container to opacity:1 never flashes them visible.
         tl.set(".k3-hero__top .k3w", { opacity: 0, yPercent: 60 }, 0);
         if (split) tl.set(split.chars, { yPercent: 120 }, 0);
-        tl.set(".k3-hero__dot", { opacity: 0 }, 0);
         tl.set(".k2-hero__ctas > *", { opacity: 0, y: 14 }, 0);
 
         tl
@@ -47,17 +45,13 @@ export function Hero() {
           // "I serve" rises
           .set(".k3-hero__top", { opacity: 1 }, 0.35)
           .to(".k3-hero__top .k3w", { opacity: 1, yPercent: 0, stagger: 0.09, duration: 0.7 }, 0.35)
-          // "websites." plates letter-by-letter (masked) + the ember dot.
-          // The dot lands at rotation:45 so it keeps the diamond — animating to 0
-          // would flatten it back to a round period and fight the CSS.
+          // "websites" plates letter-by-letter (masked)
           .set(".k3-hero__big", { opacity: 1 }, 0.5)
           .to(split ? split.chars : [], { yPercent: 0, stagger: 0.04, duration: 0.72, ease: "power3.out" }, 0.5)
-          .fromTo(".k3-hero__dot", { opacity: 0, scale: 0.3, rotation: 90 },
-            { opacity: 1, scale: 1, rotation: 45, x: "-0.22em", y: "0.1em", transformOrigin: "50% 50%", duration: 0.55, ease: "back.out(2.4)" }, 1.0)
           // CTAs + cue land last
-          .set(".k2-hero__ctas", { opacity: 1 }, 1.05)
-          .to(".k2-hero__ctas > *", { opacity: 1, y: 0, stagger: 0.1, duration: 0.6 }, 1.05)
-          .fromTo(".k3-hero__cue", { opacity: 0 }, { opacity: 1, duration: 0.6 }, 1.25);
+          .set(".k2-hero__ctas", { opacity: 1 }, 1.0)
+          .to(".k2-hero__ctas > *", { opacity: 1, y: 0, stagger: 0.1, duration: 0.6 }, 1.0)
+          .fromTo(".k3-hero__cue", { opacity: 0 }, { opacity: 1, duration: 0.6 }, 1.2);
 
         // Scroll-out: the plate lifts away and the bloom dims (parallax).
         const out = gsap.timeline({
@@ -104,7 +98,6 @@ export function Hero() {
           </span>
           <span className="k3-hero__big" aria-hidden="true">
             <span className="k3-hero__word">websites</span>
-            <span className="k3-hero__dot" aria-hidden="true" />
           </span>
         </h1>
         <div className="k2-hero__ctas hero-in">

@@ -350,18 +350,6 @@ html.jd-nav-open body { overflow: hidden; }
     5px 12px 16px rgba(0,0,0,0.6),
     0 0 34px rgba(210,70,47,0.28);
 }
-/* diamond period: ember square rotated 45° — tuck beside the baseline after "S" */
-.k3-hero--room .k3-hero__dot {
-  display: inline-block; flex-shrink: 0;
-  width: 0.1em; height: 0.1em;
-  margin-left: 0.04em; margin-bottom: 0.02em;
-  background: var(--ember);
-  box-shadow: 0 2px 0 var(--ember-deep), 0 5px 0 #5f1c12, 5px 12px 16px rgba(0,0,0,0.6), 0 0 30px var(--ember-glow);
-  transform: rotate(45deg) translate(-0.22em, 0.1em); transform-origin: 50% 50%; }
-body:not([data-motion="off"]) .k3-hero--room .k3-hero__dot { animation: dotIn .7s var(--e-out) forwards; }
-@keyframes dotIn { from { opacity: 0; transform: rotate(45deg) translate(-0.22em, 0.45em) scale(0.6); } to { opacity: 1; transform: rotate(45deg) translate(-0.22em, 0.1em); } }
-body[data-motion="off"] .k3-hero--room .k3-hero__dot { transform: rotate(45deg) translate(-0.22em, 0.1em); opacity: 1; }
-@media (prefers-reduced-motion: reduce) { .k3-hero--room .k3-hero__dot { transform: rotate(45deg) translate(-0.22em, 0.1em) !important; opacity: 1 !important; animation: none !important; } }
 
 /* build-in animations (legacy CSS path — GSAP owns the live hero) */
 body:not([data-motion="off"]) .k3-hero--room .k3l { opacity: 0; transform-origin: 50% 100%; animation: letterIn .7s var(--e-out) forwards; }
