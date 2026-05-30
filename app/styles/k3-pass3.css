@@ -97,6 +97,12 @@ body:not([data-motion="off"]) .k3-hero__rule { animation: ruledraw 1s var(--e-ou
 .k3-steam span:nth-child(3) { left: 73%; animation: steam 10s ease-in 4s infinite; }
 @keyframes steam { 0% { transform: translateY(0) scale(0.7); opacity: 0; } 25% { opacity: 0.8; } 100% { transform: translateY(-340px) scale(1.7); opacity: 0; } }
 
+/* Calmed ambient candlelight — opacity-only (no transform, so it's safe under
+   reduced motion). Bloom and spot use slightly different periods so they drift
+   in and out of phase: an organic flicker, never a synced pulse. */
+@keyframes candle-breath { 0%, 100% { opacity: 0.7; } 50% { opacity: 0.95; } }
+@keyframes spot-breath { 0%, 100% { opacity: 0.66; } 50% { opacity: 1; } }
+
 /* hero → next section transition: soft fade to charcoal edge */
 .k3-hero::before { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 22%; z-index: 1; pointer-events: none;
   background: linear-gradient(180deg, transparent, var(--char)); }
@@ -244,12 +250,26 @@ body[data-motion="off"] .k3-hairline { transform: scaleX(1); }
 
 /* ============== REDUCED MOTION / MOTION OFF ============== */
 @media (prefers-reduced-motion: reduce) {
-  .plate-word, .k3-hero__rule, .k3-hero__bloom, .k3-hero__h1::after { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .plate-word, .k3-hero__rule, .k3-hero__h1::after { animation: none !important; opacity: 1 !important; transform: none !important; }
   .k3-steam, .k3-hero__cue .ar { animation: none !important; }
+  /* The candlelight stays ALIVE rather than frozen: an opacity-only breath (no
+     vestibular movement) so the hero reads as a lit room, not a dead still. The
+     centring translate is restored too — the old `transform: none` left the warm
+     pool drifting off to the corner instead of sitting behind the plate. A single
+     richer WebGL heat frame is drawn behind it (see hero-shader.tsx). */
+  .k3-hero--room .k3-hero__bloom {
+    transform: translate(-50%, -50%) !important;
+    animation: candle-breath 7.5s ease-in-out infinite !important;
+  }
+  .k3-hero--room .k3-hero__spot { animation: spot-breath 9s ease-in-out infinite !important; }
   .k3-docket { transition: none; }
   .k3-drawline { transform: scaleX(1); }
   .k3-hairline { transform: scaleX(1); }
 }
+/* When the full motion path is live (normal no-preference OR the ?motion=on
+   override) GSAP owns the bloom — silence the calm breath so they never fight. */
+html.jd-anim .k3-hero--room .k3-hero__bloom,
+html.jd-anim .k3-hero--room .k3-hero__spot { animation: none !important; }
 body[data-motion="off"] .k3-steam span, body[data-motion="off"] .k3-hero__bloom, body[data-motion="off"] .k3-hero__cue .ar { animation: none !important; opacity: 0 !important; }
 body[data-motion="off"] .k3-hero__rule { transform: scaleX(1); }
 body[data-motion="off"] .k3-drawline { transform: scaleX(1); }
@@ -321,7 +341,7 @@ html.jd-nav-open body { overflow: hidden; }
 @media (max-width: 600px) { .k3-reserve__rows { grid-template-columns: 1fr; } }
 
 /* =======================================================================
-   HERO v3 — dark room, heavy condensed 3D beveled type, letters build in
+   HERO v3 — dark room, Didone display type, letters build in
    ======================================================================= */
 .k3-hero--room { background: var(--char); color: var(--bone); }
 .k3-hero--room .k2-hero__inner { z-index: 5; position: relative; gap: clamp(28px, 4vw, 48px); }
@@ -334,21 +354,18 @@ html.jd-nav-open body { overflow: hidden; }
   text-shadow: 0 2px 24px rgba(0,0,0,0.5); }
 .k3-hero--room .k3w { display: inline-block; }
 
-/* "websites." — heavy condensed, beveled + extruded 3D */
+/* "websites." — Didone display (Bodoni Moda), high-contrast editorial */
 .k3-hero--room .k3-hero__big { display: inline-flex; align-items: flex-end; justify-content: center; flex-wrap: nowrap;
-  font-family: var(--display); font-weight: 400; text-transform: uppercase;
-  font-size: clamp(104px, 30vw, 460px); line-height: 0.76; letter-spacing: 0.005em; }
+  font-family: var(--headline); font-weight: 700; font-style: normal; text-transform: uppercase;
+  font-size: clamp(88px, 24vw, 400px); line-height: 0.78; letter-spacing: -0.035em;
+  font-variation-settings: "opsz" 96; }
 .k3-hero--room .k3l {
-  display: inline-block; color: #f6ead7;
+  display: inline-block;
+  color: var(--bone);
   text-shadow:
-    0 -1px 0 #fffaf0,
-    0 1px 0 #b7a081,
-    1px 2px 0 #8a7257,
-    2px 4px 0 #5f4d39,
-    3px 6px 0 #3c3025,
-    4px 8px 0 #2a2019,
-    5px 12px 16px rgba(0,0,0,0.6),
-    0 0 34px rgba(210,70,47,0.28);
+    0 1px 0 rgba(255,186,142,0.42),
+    0 2px 1px rgba(74,20,11,0.72),
+    0 6px 20px rgba(0,0,0,0.6);
 }
 
 /* build-in animations (legacy CSS path — GSAP owns the live hero) */

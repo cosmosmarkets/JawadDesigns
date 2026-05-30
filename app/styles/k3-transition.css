@@ -1,0 +1,60 @@
+/* ============================================================================
+   Stage 3.7 — route-transition overlay (the baseline veil)
+   ----------------------------------------------------------------------------
+   ONE fixed full-viewport layer, rendered by RouteTransitionProvider as a
+   sibling of {children} in the layout, so it survives App Router client-side
+   navigation. Normally inert (pointer-events none, hidden from AT). On nav the
+   provider drives it via GSAP (transform/opacity only) so the room blinks dark
+   through a warm candlelight veil — never a slow fade-through-black.
+
+   Stage 4's menu unfold drives this SAME element as an upgraded variant
+   ([data-variant]); do not add a second overlay.
+   ========================================================================== */
+
+.jd-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 90; /* above the nav (60) and the mobile drawer (80) — covers all */
+  pointer-events: none; /* inert: never blocks the page, CTA, or Ticket rail */
+  overflow: hidden;
+  opacity: 0; /* autoAlpha parks it hidden between navs */
+  visibility: hidden;
+  contain: layout style paint;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+/* Warm candlelight pool — a soft ember-warm iris over deep charcoal, so the
+   cover reads as the room pooling into shadow rather than a flat black wipe. The
+   base black is the --char token, so the veil tracks the room's contrast setting
+   instead of freezing one hardcoded charcoal. */
+.jd-veil__pool {
+  position: absolute;
+  inset: -10%;
+  background:
+    radial-gradient(58% 48% at 50% 46%, rgba(86, 44, 20, 0.55), transparent 70%),
+    radial-gradient(130% 104% at 50% 46%, #150c06 36%, var(--char) 100%);
+}
+
+/* Film grain — same noise tile the Stage 1 atmosphere uses (k3-pass4-material
+   .jd-atmos__grain), so the texture matches. Static during the blink to stay
+   cheap (the atmosphere copy animates; the veil's brief cover doesn't need it). */
+.jd-veil__grain {
+  position: absolute;
+  inset: -25%;
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* The grain off-switch mirrors the atmosphere's tweak. The reduced-motion /
+   motion-off bypass is handled in the provider (so the ?motion=on dev override
+   still previews the veil); body[data-motion="off"] also hard-hides it here as a
+   belt-and-braces guard, since that state is treated as reduced everywhere. */
+body[data-grain="off"] .jd-veil__grain {
+  display: none;
+}
+body[data-motion="off"] .jd-veil {
+  display: none !important;
+}

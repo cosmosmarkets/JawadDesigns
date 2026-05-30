@@ -151,9 +151,12 @@ export function HeroShader() {
     };
     canvas.addEventListener("webglcontextlost", onLost);
 
-    // Reduced motion / mobile: one settled frame, never loop.
+    // Reduced motion / mobile: one settled frame, never loop. Drawn at a more
+    // developed plume time (~7s) than the near-static t≈0 so the static haze has
+    // real structure pooling on the plate — the calm CSS candle-breath does the
+    // rest of the "material lives" work without any rAF under reduced motion.
     if (prefersReducedMotion() || window.matchMedia("(max-width: 720px)").matches) {
-      requestAnimationFrame(() => draw(1200));
+      requestAnimationFrame(() => draw(7000));
       return () => {
         canvas.removeEventListener("webglcontextlost", onLost);
       };

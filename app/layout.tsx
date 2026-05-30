@@ -11,11 +11,13 @@ import "./styles/k3-tokens.css";
 import "./styles/k3-sections.css";
 import "./styles/k3-pass3.css";
 import "./styles/k3-pass4-material.css";
+import "./styles/k3-transition.css";
 import { ThemeProvider } from "@/components/site/theme-provider";
 import { Atmosphere } from "@/components/site/atmosphere";
 import { Nav } from "@/components/site/nav";
 import { Footer } from "@/components/site/footer";
 import { SmoothScrollProvider } from "@/components/site/smooth-scroll-provider";
+import { RouteTransitionProvider } from "@/components/site/route-transition";
 import { Analytics } from "@vercel/analytics/react";
 
 const bodoni = Bodoni_Moda({
@@ -96,7 +98,9 @@ export default function RootLayout({
         >
           <SmoothScrollProvider />
           <Nav />
-          {children}
+          {/* The veil overlay renders inside this provider as a sibling of
+              {children}, so it survives client-side navigation (Stage 0). */}
+          <RouteTransitionProvider>{children}</RouteTransitionProvider>
           <Footer />
           <Atmosphere />
         </ThemeProvider>

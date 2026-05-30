@@ -12,12 +12,12 @@ import { Mark } from "./mark";
    light up via usePathname; the two hash links are on-page anchors, never
    "active". CTA points at the real /contact page (the old modal is gone).
    Mobile drawer is portaled to body so sticky nav + backdrop-filter don't clip it. */
-const NAV_LINKS: [label: string, href: string][] = [
-  ["Work", "/work"],
-  ["Chef", "/about"],
-  ["Menu", "/menu"],
-  ["Process", "/#process"],
-  ["Details", "/menu#details"],
+const NAV_LINKS: [label: string, href: string, sub: string][] = [
+  ["Dishes", "/work", "Portfolio"],
+  ["Chef", "/about", "About"],
+  ["Menu", "/menu", "Services"],
+  ["Kitchen", "/#process", "Process"],
+  ["Services", "/menu#details", "Details"],
 ];
 
 export function Nav() {
@@ -95,7 +95,7 @@ export function Nav() {
           </button>
         </div>
         <nav className="k3-drawer__links" aria-label="Mobile">
-          {NAV_LINKS.map(([l, h]) => (
+          {NAV_LINKS.map(([l, h, sub]) => (
             <Link
               key={l}
               href={h}
@@ -104,6 +104,7 @@ export function Nav() {
               aria-current={isActive(h) ? "page" : undefined}
             >
               {l}
+              <span className="k3-drawer__sub">{sub}</span>
             </Link>
           ))}
         </nav>
@@ -112,7 +113,7 @@ export function Nav() {
           className="btn red lg k3-drawer__cta"
           onClick={() => setMenu(false)}
         >
-          Place your order <span className="arrow">→</span>
+          Chat to the chef <span className="arrow">→</span>
         </Link>
         <span className="eyebrow-mono k3-drawer__note">One seat open this month</span>
       </div>,
@@ -124,19 +125,22 @@ export function Nav() {
       <header className="k2-nav" id="top" data-screen-label="nav">
         <Mark />
         <nav className="k2-nav__links" aria-label="Primary">
-          {NAV_LINKS.map(([l, h]) => (
+          {NAV_LINKS.map(([l, h, sub]) => (
             <Link
               key={l}
               href={h}
               className={cn(isActive(h) && "is-active")}
               aria-current={isActive(h) ? "page" : undefined}
             >
-              {l}
+              <span className="k2-nav__sub" aria-hidden="true">
+                {sub}
+              </span>
+              <span className="k2-nav__label">{l}</span>
             </Link>
           ))}
         </nav>
         <Link href="/contact" className="btn red sm k2-nav__cta">
-          Place your order <span className="arrow">→</span>
+          Chat to the chef <span className="arrow">→</span>
         </Link>
         <button
           type="button"

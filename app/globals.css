@@ -185,3 +185,58 @@
   color: var(--ember-text); /* AA text variant (≥4.5:1) — ember-as-text on the ash card */
   font-size: 14px;
 }
+
+/* ── Nav maître-d' subtext ─────────────────────────────────────────────
+   Bronze hint above each desktop heading, revealed on hover/focus only.
+   Absolutely positioned so it never reflows the row. Added in globals so
+   the new classes are loaded regardless of the k3-* stylesheet order.   */
+.k2-nav__links a {
+  position: relative;
+}
+
+.k2-nav__sub {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% - 0.05rem);
+  font-family: var(--font-mono, ui-monospace, "SFMono-Regular", monospace);
+  font-size: 0.56rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--bronze-2, var(--bronze, #b08d57));
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(0.25rem);
+  transition: opacity 0.25s var(--ease, ease), transform 0.25s var(--ease, ease);
+  pointer-events: none;
+}
+
+.k2-nav__links a:hover .k2-nav__sub,
+.k2-nav__links a:focus-visible .k2-nav__sub {
+  opacity: 0.9;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .k2-nav__sub {
+    transition: opacity 0.2s ease;
+    transform: none;
+  }
+}
+
+/* Mobile drawer has no hover — bronze hint rides permanently above the label. */
+.k3-drawer__links a {
+  display: flex;
+  flex-direction: column;
+}
+
+.k3-drawer__sub {
+  order: -1;
+  font-family: var(--font-mono, ui-monospace, "SFMono-Regular", monospace);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--bronze-2, var(--bronze, #b08d57));
+  margin-bottom: 0.3rem;
+}
