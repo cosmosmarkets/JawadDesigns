@@ -35,15 +35,46 @@ export const LENIS_CONFIG = {
 } as const;
 
 /**
+ * Dev preview override: `?motion=on` sets html[data-force-motion] (in the
+ * layout boot script) so the full motion path runs even under reduced motion.
+ * Preview only — it's opt-in per URL and never affects normal visitors.
+ */
+export function forceMotion(): boolean {
+  if (typeof window === "undefined") return false;
+  return document.documentElement.dataset.forceMotion === "1";
+}
+
+/**
  * The single off-switch: true when the OS asks for reduced motion OR the
- * "Scroll & haze" tweak is off (body[data-motion="off"]). The provider also
- * reacts to OS changes live via gsap.matchMedia; this helper covers the
- * imperative checks (e.g. the Stage 2 shader deciding never to start).
+ * "Scroll & haze" tweak is off (body[data-motion="off"]) — unless the dev
+ * ?motion=on override is active. The provider also reacts to OS changes live
+ * via gsap.matchMedia; this helper covers the imperative checks (e.g. the
+ * Stage 2 shader deciding never to start).
  */
 export function prefersReducedMotion(): boolean {
   if (typeof window === "undefined") return false;
+  if (forceMotion()) return false;
   return (
     window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
     document.body?.dataset.motion === "off"
   );
+}
+
+/**
+ * Run `setup` when motion is allowed, returning a cleanup for the useGSAP return.
+ *
+ * Normal path: gated on the live `(prefers-reduced-motion: no-preference)` media
+ * query via gsap.matchMedia — it reacts to OS toggles and auto-reverts.
+ * Override path (`?motion=on`): run `setup` directly so the full sequence plays
+ * even under reduced motion. Tweens/ScrollTriggers created inside still live in
+ * the surrounding useGSAP context, so they revert on unmount either way.
+ */
+export function withMotion(setup: () => void | (() => void)): () => void {
+  if (forceMotion()) {
+    const cleanup = setup();
+    return () => cleanup?.();
+  }
+  const mm = gsap.matchMedia();
+  mm.add("(prefers-reduced-motion: no-preference)", setup);
+  return () => mm.revert();
 }

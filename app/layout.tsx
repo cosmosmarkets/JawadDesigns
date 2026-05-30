@@ -77,11 +77,13 @@ export default function RootLayout({
       <body data-motion="on">
         {/* Pre-paint guard: add jd-anim only when motion is allowed, so reveals
             start hidden before ScrollTrigger animates them (no flash). Reduced
-            motion / no-JS leaves the class off and all content visible. */}
+            motion / no-JS leaves the class off and all content visible.
+            Dev preview: ?motion=on forces the full motion path (sets
+            data-force-motion) even under reduced motion — opt-in per URL. */}
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "try{if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('jd-anim')}catch(e){}",
+              "try{var f=new URLSearchParams(location.search).get('motion');f=f==='on'||f==='force';if(f){document.documentElement.dataset.forceMotion='1';console.info('[motion] forced on via ?motion=on (reduced-motion override)')}if(f||!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('jd-anim')}catch(e){}",
           }}
         />
         <ThemeProvider

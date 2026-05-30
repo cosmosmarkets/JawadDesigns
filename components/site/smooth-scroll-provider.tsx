@@ -30,18 +30,19 @@ import {
   EASE,
   REVEAL,
   LENIS_CONFIG,
+  withMotion,
 } from "@/lib/motion";
 
 export function SmoothScrollProvider() {
   const pathname = usePathname();
   const lenisRef = useRef<Lenis | null>(null);
 
-  // 1) Lenis + the global motion flag — set up once, reduced-motion reactive.
+  // 1) Lenis + the global motion flag — set up once, reduced-motion reactive
+  //    (or forced on via ?motion=on for dev preview).
   useGSAP(() => {
     const root = document.documentElement;
-    const mm = gsap.matchMedia();
 
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
+    return withMotion(() => {
       // The boot script in layout already added jd-anim pre-paint; keep it
       // owned here so a live OS toggle stays in sync.
       root.classList.add("jd-anim");
@@ -76,16 +77,12 @@ export function SmoothScrollProvider() {
         root.classList.remove("jd-anim");
       };
     });
-
-    return () => mm.revert();
   }, []);
 
   // 2) Reveal batch — rebuilt per route because `children` changes on nav.
   useGSAP(
     () => {
-      const mm = gsap.matchMedia();
-
-      mm.add("(prefers-reduced-motion: no-preference)", () => {
+      return withMotion(() => {
         if (gsap.utils.toArray(".reveal").length) {
           ScrollTrigger.batch(".reveal", {
             start: "top 88%",
@@ -121,8 +118,6 @@ export function SmoothScrollProvider() {
         // Positions depend on fonts/images that may settle after mount.
         ScrollTrigger.refresh();
       });
-
-      return () => mm.revert();
     },
     { dependencies: [pathname], revertOnUpdate: true },
   );
