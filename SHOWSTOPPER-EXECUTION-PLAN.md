@@ -1,9 +1,12 @@
 # Showstopper Execution Plan — Workflow-Orchestrated
 
-> **On approval (execution step 0):** persist this document verbatim to
-> `jawad-designs/SHOWSTOPPER-EXECUTION-PLAN.md`, `git add` it, then immediately run the
-> **Pre-flight finish-up workflow** (design-neutral) and stop at the Pre-flight gate.
-> This file (the plan-mode plan) and the repo doc are the same living artifact.
+> **CURRENT STATE (2026-05-31):** Pre-flight (`78fadc3`, tag `pre-flight`), the Foundation
+> session = Stage 0 + Stage 0.5 (`5409bb1`, tag `stage-0`), Stage 3.5 (`a6413b8` + `41c926f`
+> + `764123a`), and the Stage 3.7 route veil (`0ef8f5d`) are all **DONE & committed**. Local
+> HEAD is `764123a`. The **live frontier is Stage 4** (the menu-unfold signature). Remaining
+> order: **4 → 4.8 → 5 → 6 → 7** (then post-7: 8A content, 8B SEO).
+>
+> This file and the source spec `jawad-design-showstopper-plan.md` are the same living artifact.
 
 ---
 
@@ -11,36 +14,29 @@
 
 `jawad-design-showstopper-plan.md` is the source-of-truth spec for taking the site from
 "good developer" to a screenshotted, premium portfolio that justifies the Chef's Table
-price. The earlier stages are committed (`5e261c1`, deployed) and `verify-stage3` passes —
-**but a read-only audit (9-agent workflow, this session) found `verify-stage3` only ever
-asserted *home*, and the truth is that Stages 1–3 are only fully realised on home.** What
-remains is the back half of the funnel overhaul — the two distributed signature moments
-(menu-unfold, cross-page ticket), the editorial layout pass, and final QA — **plus three
-pieces of unfinished foundation the audit surfaced**:
+price. A read-only audit (9-agent workflow) earlier found `verify-stage3` only ever asserted
+*home*, surfacing three pieces of **unfinished foundation**. **All three are now DONE** —
+they were completed in the Foundation session (`5409bb1`, tag `stage-0`) and Pre-flight
+(`78fadc3`, tag `pre-flight`), past tense:
 
-1. **Pre-flight is not finished.** Per-route baselines (only home was captured) and the one
-   raster paper-fibre tile (decision #5) are outstanding.
-2. **Stage 0 routing-hardening is genuinely incomplete.** Route-change cleanup kills batches
-   on `pathname` change (`smooth-scroll-provider.tsx`, `revertOnUpdate:true`), but there is
-   **no `ScrollTrigger.refresh()` after nav, no `lenis.scrollTo(0)` reset, and `--jd-spot-y`
-   never resets** — the spotlight trigger lives in a `[]`-dep `useGSAP` and persists across
-   routes. The multipage motion contract is not yet satisfied.
-3. **Stage 3 (and parts of Stages 1–2) shipped on home only — `stage3Complete: false`.**
-   `/work`, `/menu`, `/about`, `/contact` each fail **4 of 5** Stage-3 sub-requirements:
-   **zero `.reveal-lines` on any heading**, **bare lead headings** (no composed entrance),
-   **no scrubbed `.k3-hairline` dividers**, **no parallax depth** — even though the SplitText
-   line-wipe, hairline-draw, and parallax engines are all fully wired in the provider and
-   merely lack targets on those routes. The shared `.reveal` batch is also missing the
-   spec's "touch of scale" (affects every route). Plus: `/contact` + the placeholder routes
-   read as flat charcoal (Stage 1 gap), and the hero tweens a `display:none` `.k3-hero__bloom`
-   (Stage 2 dead-animation). Per your request, these become a **Stage 0.5 improvement pass
-   bundled into the Stage 0 foundation session.**
+1. **Pre-flight finished** — per-route baselines (all 5 routes × 3 viewports) + the one raster
+   paper-fibre WebP tile produced. ✅ `78fadc3`.
+2. **Stage 0 routing-hardening landed** — the route-change motion contract (`lenis.scrollTo(0)`
+   reset, `ScrollTrigger.refresh()` after nav, `--jd-spot-y`/`--jd-spot-bias`/`--k3-steam-strength`
+   reset per route). ✅ `5409bb1`.
+3. **Stage 3 completed on all 5 routes** (was home-only, `stage3Complete: false`) — `.reveal-lines`,
+   composed lead entrances, scrubbed `.k3-hairline` dividers, parallax depth, `.reveal` scale
+   channel; plus Stage 1 material polish (`/contact` + placeholders) and the Stage 2 hero-bloom
+   fix. This was the bundled **Stage 0.5** pass. ✅ `5409bb1`.
 
-This plan drives the remaining work — **Pre-flight finish → Foundation session (Stage 0
-hardening + Stage 0.5 improvement pass over Stages 1–3.5) → Stage 4 → Stage 5 → Stage 6 →
-Stage 7** — through **Workflow-tool orchestration** (parallel design fan-out, pipelines,
-adversarial verification), as a **sequence of human-gated workflows**, one stage per
-`/clear`'d session, `git tag stage-N` between stages for cheap rollback.
+Beyond that foundation, **Stage 3.5** (material visibility / tonal unification + dead hero/weld
+activation + material-depth push — `a6413b8` + `41c926f` + `764123a`) and the **Stage 3.7 route
+veil** (shared route-transition overlay — `0ef8f5d`) also landed.
+
+Remaining work: **Stage 4 → Stage 4.8 → Stage 5 → Stage 6 → Stage 7** — driven through
+**Workflow-tool orchestration** (parallel design fan-out, pipelines, adversarial verification),
+as a **sequence of human-gated workflows**, one stage per `/clear`'d session, `git tag stage-N`
+between stages for cheap rollback.
 
 The intended outcome: every route — not just home — fully carries the motion + material
 language; each remaining signature moment lands at its acceptance check or is cut to a clean
@@ -54,13 +50,13 @@ static fallback; the perf budget holds at every gate; nothing already shipped is
 
 | # | Decision | Resolution |
 |---|----------|------------|
-| 1 | **Orchestration model** | **Fan-out to think, serialize writes.** Subagents run parallel *divergent design + adversarial-verify + perf/QA* (read-mostly, conflict-free). The winning approach is written by **one serial builder** (main thread or a single builder agent). Shared hot files (`home.tsx`, `globals.css`, `app/layout.tsx`, `menu-full.tsx`, `smooth-scroll-provider.tsx`) never collide. **No `isolation:'worktree'`** — every stage touches the same few files, so worktree writers buy only merge pain. |
+| 1 | **Orchestration model** | **Fan-out to think, serialize writes.** Subagents run parallel *divergent design + adversarial-verify + perf/QA* (read-mostly, conflict-free). The winning approach is written by **one serial builder** (main thread or a single builder agent). Shared hot files (`home.tsx`, `globals.css`, `app/layout.tsx`, `menu-full.tsx`, `smooth-scroll-provider.tsx`, `components/site/route-transition.tsx`, `components/site/ticket.tsx` (Stage 5), `app/api/contact/route.ts` (Stage 4.8 if backend)) never collide. **No `isolation:'worktree'`** — every stage touches the same few files, so worktree writers buy only merge pain. |
 | 2 | **Variant exploration** | For the two design-ambiguous stages (4, 6): **2 coded variants** built on a throwaway dev-only `app/(lab)/…` route, screenshotted via the Playwright harness, scored by a judge panel (taste · perf · a11y lenses), winner synthesized into the real component; lab routes deleted before the stage commit. |
 | 3 | **Paper-fibre tile** | **Procedural → rasterize to WebP.** Author fibre via `feTurbulence`/noise on-palette, rasterize to a seamless, tileable WebP ≤40KB (sharp/canvas). Deterministic, perfectly tiling, no external image API. `imagegen-frontend-web` is fallback only. |
-| 4 | **CONFIRMED trigger** | **Fires the instant `onSubmit` passes zod validation** (alongside the existing mailto handoff). Add an on-page success acknowledgement to land the stamp. **Resend/Supabase backend stays out of scope.** |
+| 4 | **CONFIRMED trigger** | **DEFERRED decision — resolved at the Stage 4.8 gate.** Either (a) a **real Resend backend** (`app/api/contact/route.ts`) — CONFIRMED fires on real delivery, on-page success state, no mailto; or (b) **validation-pass-only** — CONFIRMED + on-page ack fire on zod pass, keep the mailto handoff. **Verified current code:** `/contact` still does `window.location.href="mailto:…"`; there is **no** `app/api/contact`; `resend` + `@supabase/*` are installed and `.env.local` exists. The gate picks (a) or (b). |
 | 5 | **Sound** | **Dropped entirely.** No audio system exists; the "existing tick/mute toggle" the spec references does not exist. Ticket-ink and CONFIRMED stay purely visual. |
-| 6 | **First run after approval** | **Run Pre-flight now**, stop at its gate. The **Foundation session (Stage 0 + 0.5)** runs next as one `/clear`'d session; Stages 4/5/6/7 each get their own fresh session after that. |
-| 7 | **Stage 3 status (audited this session)** | **`stage3Complete: false` — home only.** `/work`·`/menu`·`/about`·`/contact` fail 4/5 Stage-3 sub-requirements; engines are wired but untargeted. Completing them is **Stage 0.5**, bundled into the Foundation session. `verify-stage3.mjs` is upgraded to assert **all five routes**, not just home. |
+| 6 | **First run after approval** | **DONE.** Pre-flight already ran (tag `pre-flight`, `78fadc3`) and the **Foundation session (Stage 0 + 0.5)** already ran (tag `stage-0`, `5409bb1`). The **next run is the Stage 4 workflow**; Stages 4.8/5/6/7 each get their own fresh `/clear`'d session after that. |
+| 7 | **Stage 3 status** | **COMPLETE on all 5 routes** (Foundation `5409bb1`). `/work`·`/menu`·`/about`·`/contact` now carry the full Stage-3 baseline. `verify-stage3.mjs` asserts **all five routes** and passes. |
 
 **Why fan-out is still worth it under serial writes:** the parallelism lives in *thinking and
 checking*, not typing. Each stage gets divergent design directions explored simultaneously,
@@ -74,12 +70,15 @@ tightly-coupled single Next app where motion correctness is subtle and the files
 
 | Order | Stage | Entry precondition (gate green) | Signature / focus | Write-mode | Rollback tag | Perf diff to run |
 |---|---|---|---|---|---|---|
-| 1 | **Pre-flight finish** | current `main` (`5e261c1`) | Per-route baselines + WebP tile (no design change) | serial (1 asset writer) | `pre-flight` | Establish baseline: per-route First-Load-JS + Lighthouse + LCP/CLS |
-| 2 | **Foundation = Stage 0 + Stage 0.5** | Pre-flight gate | **0**: route-change motion contract. **0.5**: complete Stage 3 baseline on `/work`·`/menu`·`/about`·`/contact` (reveal-lines, lead entrances, hairlines, parallax, scale channel) + Stage 1 polish (`/contact` + placeholder cards, spotlight anchor, AA) + Stage 2 hero-bloom fix | design fan-out → serial builder | `stage-0` | No JS regression; nav leak-free; per-route reveals cheap |
-| 3 | **Stage 4** | Foundation gate | **Signature #2** — closed menu → unfold-as-page-transition | 2 lab variants → serial synth | `stage-4` | ≤150KB JS added cumulative; LCP/CLS on `/` + `/menu` |
-| 4 | **Stage 5** | Stage 4 gate | **Signature #3** — cross-page printing ticket | serial (new files) | `stage-5` | Ticket JS cheap; off-screen paused; cumulative ≤150KB |
-| 5 | **Stage 6** | Stage 5 gate | Editorial layout tension (Trust / Why / Pantry) | 2 lab variants → serial synth | `stage-6` | No JS regression; contrast preserved |
-| 6 | **Stage 7** | Stage 6 gate | Polish · perf · QA across every route | measurement fan-out (read-only) | `stage-7` | Final bundle diff vs Pre-flight ≤150KB; tile ≤40KB; Lighthouse ≥90/route |
+| 1 | **Pre-flight finish** ✅ DONE (`78fadc3`, tag `pre-flight`) | current `main` (`5e261c1`) | Per-route baselines + WebP tile (no design change) | serial (1 asset writer) | `pre-flight` | Baseline established: per-route First-Load-JS + Lighthouse + LCP/CLS in `PERF-BUDGET.md` |
+| 2 | **Foundation = Stage 0 + Stage 0.5** ✅ DONE (`5409bb1`, tag `stage-0`) | Pre-flight gate | **0**: route-change motion contract. **0.5**: Stage 3 baseline on all non-home routes (reveal-lines, lead entrances, hairlines, parallax, scale channel) + Stage 1 polish + Stage 2 hero-bloom fix | design fan-out → serial builder | `stage-0` | No JS regression; nav leak-free (`verify-stage0` PASS) |
+| 2.5 | **Stage 3.5** ✅ DONE (`a6413b8` + `41c926f` + `764123a`, NOT tagged) | Foundation gate | Material visibility / tonal unification across funnel + dead hero/weld activation + material-depth push | serial builder | — | Within budget |
+| 2.7 | **Stage 3.7 route veil** ✅ DONE (`0ef8f5d`, NOT tagged) | — | Shared route-transition overlay (`route-transition.tsx` + `k3-transition.css`, wired in `app/layout.tsx`); `verify-stage3.7` 14/14 | serial (new files + layout mount) | — | No JS regression |
+| 3 | **Stage 4** ← LIVE FRONTIER | Foundation/3.5/3.7 done | **Signature #2** — closed menu → unfold-as-page-transition (**reuses the 3.7 overlay**) | 2 lab variants → serial synth | `stage-4` | ≤150KB JS added cumulative; LCP/CLS on `/` + `/menu` |
+| 4 | **Stage 4.8** | Stage 4 gate | **Wire the contact submit (decision-at-gate)** — real Resend backend OR validation-pass-only; resolves the CONFIRMED trigger | serial (new file if backend) | `stage-4_8` | Server route cheap; no client JS regression |
+| 5 | **Stage 5** | Stage 4.8 gate | **Signature #3** — cross-page printing ticket | serial (new files) | `stage-5` | Ticket JS cheap; off-screen paused; cumulative ≤150KB |
+| 6 | **Stage 6** | Stage 5 gate | Editorial layout tension (Trust / Why / Pantry) | 2 lab variants → serial synth | `stage-6` | No JS regression; contrast preserved |
+| 7 | **Stage 7** | Stage 6 gate | Polish · perf · QA across every route | measurement fan-out (read-only) | `stage-7` | Final bundle diff vs Pre-flight ≤150KB; tile ≤40KB; Lighthouse ≥90/route |
 
 > **Why bundle 0 + 0.5:** the Stage 0 nav-reset and the Stage 3 motion completion touch the
 > same file (`smooth-scroll-provider.tsx`) and the same per-route components, and both must be
@@ -110,8 +109,11 @@ begins. No monolith runs all stages unattended. Each stage = its own session: `/
 
 ### Verify harness — exact shape to match (do not reinvent)
 
-The existing `verify-stage{0,1,2,3}.mjs` live at the **PARENT root**
-(`C:\Users\cubit\Downloads\Jawad Design\`), **not** in `jawad-designs/`. They use:
+The existing `verify-stage{0,1,2,3,3.7}.mjs` live at the **PARENT root**
+(`C:\Users\cubit\Downloads\Jawad Design\`), **workspace-only / untracked**, **not** in
+`jawad-designs/`. **Verification runs against a PRODUCTION build (`next build && next start`),
+NEVER `next dev`** (dev serves stale webpack chunks on this slow Windows box → false negatives;
+Stage 3.7 lesson). They use:
 
 - **Playwright `chromium`** (not Puppeteer; Playwright is not in `jawad-designs/package.json`
   — invoked from the parent). Stage 2 launches with SwiftShader args for WebGL.
@@ -164,7 +166,16 @@ Each new `verify-stageN.mjs` **extends this pattern** and is created at the pare
 
 ---
 
-## Pre-flight finish-up — **first runnable workflow** (design-neutral)
+## Pre-flight finish-up — ✅ DONE (`78fadc3`, tag `pre-flight`)
+
+Produced the reusable baseline + the one design-neutral asset:
+- `PERF-BUDGET.md` exists with per-route First Load JS + Lighthouse perf + LCP/CLS baseline numbers.
+- `public/assets/showstopper/paper-fibre.webp` — **4.7 KB**, 512×512, seamless/tileable, on-palette;
+  `ASSET-INVENTORY.md` updated.
+- **15 baseline screenshots** (5 routes × {1440, 768, 375}).
+- SplitText confirmed free/working (already runs in Stage 2/3).
+
+<details><summary>Historical workflow script (already ran)</summary>
 
 **Entry:** current `main` (`5e261c1`). **Goal:** capture the missing baselines + produce the one
 WebP tile, changing **no visible design**. **Write-mode:** measurement is read-only; the tile
@@ -231,9 +242,22 @@ tile/doc writers are serial by nature.
 
 **Rollback:** `git tag pre-flight`. **Perf diff:** none yet — this *is* the baseline.
 
+</details>
+
 ---
 
-## Foundation session — Stage 0 hardening + Stage 0.5 improvement pass (Stages 1–3.5)
+## Foundation session — ✅ DONE (`5409bb1`, tag `stage-0`)
+
+Stage 0 hardening + Stage 0.5 improvement pass, both landed in one session:
+- **Nav-reset contract verified by `verify-stage0`** — ScrollTrigger count 38→38 across 15 navs;
+  scroll + `--jd-spot-bias` + `--k3-steam-strength` reset per route; PASS.
+- **Stage-3 motion baseline on all 5 routes** verified by the upgraded all-routes `verify-stage3`
+  (PASS all 5); `verify-stage2` functional invariants pass.
+- **+~50 KB raw (~17 KB gzip) GSAP** on the 3 client routes (`/about`, `/work`, `/contact`) —
+  **within** the ≤150 KB gzip budget. Stage-7 candidate: dedupe GSAP into a shared chunk.
+- **`/contact` CLS fixed** 0.49 → 0.006 desktop.
+
+<details><summary>Historical design + workflow script + regression-risk notes (already ran — still useful reference)</summary>
 
 **Entry:** Pre-flight gate. **One `/clear`'d session, one `stage-0` gate.** **Skills:**
 `gsap-react` (primary), `gsap-core`, `gsap-scrolltrigger`, `gsap-performance`, plus
@@ -347,25 +371,55 @@ bites if a runtime motion toggle ships).
 **Rollback:** `git tag stage-0`. **Perf diff:** no First-Load-JS regression vs baseline (added
 per-route reveals are markup + existing engines, so JS cost ≈ 0).
 
+</details>
+
 ---
 
 ## Stage 4 — Signature #2: closed menu → unfold-as-page-transition
 
-**Entry:** Foundation gate (Stage 0 + 0.5). **Skills:** `gsap-react`, `gsap-timeline`, `taste-skill`,
-`ui-ux-pro-max`. **Design-ambiguous → 2 coded lab variants.** **Write-mode:** variants on
-`app/(lab)/menu-unfold-{a,b}` (throwaway, never committed); winner synthesized serially into
-`menu-preview.tsx` + a transition module; lab routes deleted before commit.
+**Entry:** Foundation gate + Stage 3.5 + Stage 3.7 (all done). **Skills:** `gsap-react`,
+`gsap-timeline`, `taste-skill`, `ui-ux-pro-max`. **Design-ambiguous → 2 coded lab variants.**
+**Write-mode:** variants on `app/(lab)/menu-unfold-{a,b}` (the `(lab)` route group does **not**
+exist yet — create it; throwaway, never committed); winner synthesized serially into
+`menu-preview.tsx` + the unfold choreography; lab routes deleted before commit.
+
+> **REUSES THE STAGE 3.7 OVERLAY — DO NOT BUILD A SECOND ONE.** Stage 3.7 (`0ef8f5d`) already
+> shipped the shared route-transition overlay: `components/site/route-transition.tsx`
+> (`RouteTransitionProvider` + `useRouteTransition()`) + `app/styles/k3-transition.css`, wired in
+> `app/layout.tsx` wrapping `{children}`, verified 14/14 by `verify-stage3.7.mjs`. Stage 4 drives
+> THAT API — it writes ONLY the cover/reveal choreography, never a new overlay, push, gate, or teardown.
+
+**Integration contract (VERIFIED — thread through everything below):**
+- **Drive the existing API:** `const { transitionTo, overlayRef } = useRouteTransition()`, then
+  `transitionTo('/menu', { variant: 'unfold', cover, reveal, maxDuration })`. The `cover(overlay)`
+  and `reveal(overlay)` callbacks each receive the shared `.jd-veil` overlay DOM node and return a
+  GSAP animation **or** a Promise. The provider already handles: `router.push('/menu')` AFTER cover
+  finishes, a double-rAF paint-gate before reveal, a watchdog (`DEFAULT_MAX_MS` 1400ms), and the
+  reduced-motion bypass (via `prefersReducedMotion()` from `@/lib/motion`). **Stage 4 writes ONLY
+  cover/reveal choreography.**
+- **CRITICAL opt-out:** `route-transition.tsx` installs a **CAPTURE-phase document click listener**
+  that intercepts EVERY internal `<a>` and plays the baseline veil. So the closed-menu element MUST
+  carry **`data-no-transition`** (the listener skips those) AND wire its own `onClick` calling
+  `e.preventDefault()` + `transitionTo('/menu', { variant:'unfold', cover, reveal })`. **Without
+  `data-no-transition` the generic baseline veil fires instead of the unfold.** The closed menu must
+  still be a real `<a href="/menu">` (or button) for keyboard/SR + no-JS reachability.
+- **Anchor prices** come from the SINGLE `TIERS` array exported by `components/site/menu-full.tsx`
+  (À la carte `price:"500"`, The Tasting Menu `"1,200"`, The Chef's Table `"3,000"`). The cover
+  letterpresses the three names + "from $X" pulled from that array — **never hardcode, import TIERS.**
+  The full grid (`TierGrid`) stays on `/menu`.
+- **`/menu` ALWAYS renders the open `TierGrid`** (instant for deep-link + reduced motion). Home's
+  `MenuPreview` currently renders `<TierGrid/>` inline at `components/site/sections/menu-preview.tsx`
+  — Stage 4 replaces that with the closed folded menu (**no `.k2-tier` on `/`**).
 
 **Locked behavior (decision #1):** home `MenuPreview` becomes a **closed** folded menu (paper
-grain = procedural SVG base + the new WebP tile at multiply ~8%, brass crest, letterpress
-title, faint deckled edge, a clear *"View the menu — pricing inside"* affordance + hover lift +
-inner-edge peek). It no longer renders the flat `TierGrid`. Click/Enter plays a full-bleed
-GSAP curtain unfold (CSS 3D hinge, believable paper easing + slight overshoot + tracked drop
-shadow) while `router.push('/menu')` fires underneath; the curtain covers nav so there's no
-flash; the spread resolves onto the live `/menu`. `/menu` **always renders pricing fully open**
-(instant for deep-links + reduced motion). Reduced motion = instant nav, no curtain. Preload
-`/menu` on hover/focus (`next/link` prefetch); gate the unfold's resolve on the new route
-painting; sane max-duration so it never sticks.
+grain = procedural SVG base + the WebP tile `paper-fibre.webp` at multiply ~8%, brass crest,
+letterpress title, faint deckled edge, a clear *"View the menu — pricing inside"* affordance +
+hover lift + inner-edge peek). It no longer renders the flat `TierGrid`. Click/Enter plays the
+full-bleed GSAP unfold via the 3.7 overlay's `cover`/`reveal` (CSS 3D hinge, believable paper
+easing + slight overshoot + tracked drop shadow); the provider fires `router.push('/menu')` under
+the cover so there's no flash; the spread resolves onto the live `/menu`. `/menu` **always renders
+pricing fully open** (instant for deep-links + reduced motion). Reduced motion = instant nav, no
+curtain (handled by the provider's bypass). Prefetch `/menu` on hover/focus.
 
 **Two divergent variants to build & judge:**
 - **A — single-hinge cover fold:** one cover panel rotates open on a left/top hinge (book
@@ -396,19 +450,19 @@ export const meta = { name:'stage4-unfold',
 phase('Research')
 const refs = await parallel(BENCHMARKS.map(b => () =>
   agent(`Study ${b}; extract page-transition / unfold craft: timing, easing, how they hide route swap, a11y. Cite.`, {schema:REF_SCHEMA, phase:'Research'})))
-phase('Variants')   // each builds a throwaway coded variant on a lab route
+phase('Variants')   // each builds a throwaway coded variant on a lab route (create the (lab) group)
 const built = await parallel([
-  () => agent(`Build VARIANT A (single-hinge cover fold) at app/(lab)/menu-unfold-a as a real coded unfold→/menu transition. transform/opacity only; prefetch /menu; gate resolve on paint; reduced-motion=instant nav. Brief: ${JSON.stringify(refs)}`, {schema:VARIANT_SCHEMA, phase:'Variants'}),
-  () => agent(`Build VARIANT B (gatefold double-fold) at app/(lab)/menu-unfold-b, same contract. Brief: ${JSON.stringify(refs)}`, {schema:VARIANT_SCHEMA, phase:'Variants'}),
+  () => agent(`Build VARIANT A (single-hinge cover fold) at app/(lab)/menu-unfold-a. Drive the EXISTING Stage-3.7 overlay — useRouteTransition().transitionTo('/menu',{variant:'unfold',cover,reveal,maxDuration}); write ONLY the cover/reveal choreography (each gets the .jd-veil node, returns a GSAP anim or Promise). Do NOT build a second overlay/push/gate/teardown — the provider does router.push after cover, double-rAF paint-gate, watchdog 1400ms, reduced-motion bypass. The closed menu carries data-no-transition + its own onClick(e.preventDefault()+transitionTo) and is a real <a href="/menu">. Import TIERS from components/site/menu-full.tsx for the letterpressed names + "from $X" (never hardcode). transform/opacity only; prefetch /menu. Brief: ${JSON.stringify(refs)}`, {schema:VARIANT_SCHEMA, phase:'Variants'}),
+  () => agent(`Build VARIANT B (gatefold double-fold) at app/(lab)/menu-unfold-b, same Stage-3.7-overlay contract (transitionTo unfold, cover/reveal only, data-no-transition opt-out, import TIERS, real <a href="/menu">, transform/opacity). Brief: ${JSON.stringify(refs)}`, {schema:VARIANT_SCHEMA, phase:'Variants'}),
 ])
 phase('Judge')   // screenshot mid-unfold frames + score on 3 lenses
 const verdicts = await parallel(built.flatMap(v => ['taste','perf','a11y'].map(lens => () =>
   agent(`Screenshot ${v.labRoute} mid-unfold via Playwright and judge on the ${lens} lens (believability / 60fps & no thrash / keyboard+SR reaches pricing). Score 1-10 + reasons.`, {schema:JUDGE_SCHEMA, phase:'Judge', label:`judge:${v.id}:${lens}`})))
 phase('Synthesize')   // serial builder
 const winner = pickWinner(verdicts)   // plain code: highest blended score, a11y is a gate not an average
-await agent(`Synthesize the winning unfold (${winner.id}) into the REAL components: rebuild menu-preview.tsx into the closed folded menu (paper-fibre.webp @ multiply ~8%, brass crest, deckled edge, "pricing inside" affordance) and implement the unfold-as-transition module. Delete app/(lab)/menu-unfold-*. Keep /menu rendering live TierGrid, fully open. Graft the best ideas from the runner-up where free.`, {phase:'Synthesize'})
+await agent(`Synthesize the winning unfold (${winner.id}) into the REAL components: rebuild components/site/sections/menu-preview.tsx (currently renders <TierGrid/> inline) into the closed folded menu (paper-fibre.webp @ multiply ~8%, brass crest, deckled edge, "pricing inside" affordance), with data-no-transition + its own onClick→useRouteTransition().transitionTo('/menu',{variant:'unfold',cover,reveal}), as a real <a href="/menu">. Wire the cover to letterpress TIERS (imported from menu-full.tsx) names + "from $X". REUSE the Stage-3.7 overlay (route-transition.tsx) — do NOT add a second overlay. Delete app/(lab)/menu-unfold-*. Keep /menu rendering live TierGrid fully open (no .k2-tier on /). Graft best runner-up ideas where free.`, {phase:'Synthesize'})
 phase('Verify')
-await agent('Write verify-stage4.mjs (parent root, Playwright) per the assertions; run it; return pass/fail.', {schema:VERIFY_SCHEMA, phase:'Verify'})
+await agent('Write verify-stage4.mjs at the PARENT root (workspace-only, untracked; Playwright chromium; extends the existing verify-stage*.mjs pattern: waitForServer, route pre-warm, normal + reducedMotion:"reduce" contexts, console+pageerror capture with a benign() filter for _vercel/insights 404s, ok(name,cond,extra) collector, PASS/FAIL lines + exit code) per the assertions. Run it AGAINST A PRODUCTION BUILD (next build && next start), NOT next dev. Return pass/fail.', {schema:VERIFY_SCHEMA, phase:'Verify'})
 const skeptics = await parallel(['slow-network blank-page probe','deep-link /menu instant','reduced-motion instant nav','keyboard-only path to pricing'].map(s => () =>
   agent(`Adversarially verify: ${s}. Default to "fails" unless proven. Report evidence.`, {schema:SKEPTIC_SCHEMA, phase:'Verify'})))
 return { winner, verdicts, skeptics }
@@ -418,22 +472,61 @@ return { winner, verdicts, skeptics }
 - `JUDGE_SCHEMA = {variantId, lens, score:number, reasons:[string], a11yPass:boolean}`
 - `pickWinner`: a11y must pass (hard gate); among those, highest taste+perf blend.
 
-**`verify-stage4.mjs` spec:** assert home has the closed menu (a `[data-menu-closed]` hook, no
-`.k2-tier` on `/`); clicking it ends on `/menu` with `.k2-tier` ×3 visible and no blank frame
-(poll for `/menu` paint during the transition); reduced-motion context → click navigates to
-`/menu` instantly (no curtain element); keyboard `Enter` on the menu reaches pricing; CLS ≤0.1.
+**`verify-stage4.mjs` spec:** assert home has the closed menu (a `[data-menu-closed]` hook +
+`data-no-transition`, no `.k2-tier` on `/`); clicking it ends on `/menu` with `.k2-tier` ×3
+visible and no blank frame (poll for `/menu` paint during the transition); reduced-motion context
+→ click navigates to `/menu` instantly (no curtain element); keyboard `Enter` on the menu reaches
+pricing; CLS ≤0.1.
+
+> **VERIFY AGAINST A PRODUCTION BUILD (`next build && next start`), NOT `next dev`** — on this slow
+> Windows box `next dev` serves stale webpack chunks that break hydration and produce false negatives
+> (lesson from Stage 3.7). The `verify-stage*.mjs` scripts are **WORKSPACE-ONLY at the PARENT root**
+> `C:\Users\cubit\Downloads\Jawad Design\` (untracked, Playwright `chromium`), **NOT** inside
+> `jawad-designs/`. `verify-stage4.mjs` goes there too and extends the existing pattern (waitForServer,
+> route pre-warm, normal + `reducedMotion:"reduce"` contexts, console+pageerror capture with a
+> `benign()` filter for `_vercel/insights` 404s, `ok(name,cond,extra)` collector, `PASS/FAIL` lines + exit code).
 
 **Rollback:** `git tag stage-4`. **Perf diff:** cumulative JS ≤150KB; LCP/CLS on `/` + `/menu`.
 
 ---
 
+## Stage 4.8 — Wire the contact submit (decision-at-gate)
+
+**Entry:** Stage 4 gate. **The backend choice is DEFERRED to this gate** (per this session). The
+source spec `jawad-design-showstopper-plan.md` mandates **option 1** (it has its own Stage 4.8)
+while this execution plan originally assumed **option 2** — the gate resolves it. **Current
+reality:** `/contact` still does `window.location.href="mailto:…"`; there is **no** `app/api/contact`;
+`resend` + `@supabase/*` are installed and `.env.local` exists. Whichever option is chosen sets the
+exact CONFIRMED trigger consumed by Stage 5.
+
+**Option 1 — real Resend backend:**
+- New `app/api/contact/route.ts` — server-side zod validation + Resend send (optional Supabase row).
+  Secrets stay **server-only** (CLAUDE.md rule 9 — never expose `RESEND_API_KEY` / `SUPABASE_*` to client).
+- `contact-form.tsx` **POSTs** to the route and shows an **on-page success state** (no mailto).
+- **CONFIRMED fires from the resolved success.**
+- **Graceful degrade:** if `RESEND_API_KEY` is absent, log a success rather than hard-fail, so Stage 5
+  isn't blocked on live mail credentials.
+
+**Option 2 — validation-pass-only:**
+- Keep the existing **mailto handoff**.
+- **CONFIRMED + on-page ack fire on zod validation pass** (no server route).
+
+**Rollback:** `git tag stage-4_8`. **Perf diff:** server route is cheap; no client-JS regression.
+Verify per option: option 1 → a `verify-stage4.8.mjs` asserts POST success + on-page state + the
+degrade path; option 2 → assert the ack + CONFIRMED on zod pass.
+
+---
+
 ## Stage 5 — Signature #3: the cross-page printing ticket (most at-risk)
 
-**Entry:** Stage 4 gate. **Skills:** `gsap-react`, `gsap-scrolltrigger`, `gsap-core`,
+**Entry:** Stage 4.8 gate. **Skills:** `gsap-react`, `gsap-scrolltrigger`, `gsap-core`,
 `gsap-performance`. **Write-mode:** serial; mostly **new isolated files** —
-`components/site/ticket.tsx`, `lib/ticket-state.ts` (sessionStorage), mounted in
-`app/layout.tsx`. Single design (decisions #2–4 already locked it) → adversarial state-machine
-review rather than multi-variant.
+`components/site/ticket.tsx`, `lib/ticket-state.ts` (sessionStorage). The `TicketProvider` mounts
+in `app/layout.tsx` **alongside the existing `SmoothScrollProvider` / `RouteTransitionProvider`**.
+Single design (decisions #2–4 narrow it) → adversarial state-machine review rather than multi-variant.
+
+> **CONFIRMED's exact trigger is resolved at the Stage 4.8 gate** — real backend success (option 1)
+> vs validation-pass (option 2). Wire whichever was chosen; do not re-decide here.
 
 **Locked behavior:** right-edge rail hanging ~180px from below the nav, feeding **downward**;
 real receipt styling (mono, perforated/torn top edge vector, thermal texture = SVG + WebP tile
@@ -616,7 +709,9 @@ effect; cut rather than polish a gimmick):
 | **Editorial layout (S6)** | asymmetry hurts readability or breaks contrast | Keep the current clean layout, apply **only** the oversized editorial numerals — minimal, safe delta. |
 
 **Cross-cutting:** any stage that blows the perf budget is **fixed before its gate**, never
-deferred to Stage 7. Reduced-motion regressions are release-blocking.
+deferred to Stage 7. Reduced-motion regressions are release-blocking. **Stage 4.8 backend risk:**
+if option 1 (Resend) is chosen, secrets must stay server-only and the route must degrade cleanly
+when `RESEND_API_KEY` is absent — else Stage 5's CONFIRMED wiring blocks on live credentials.
 
 ---
 
@@ -638,24 +733,22 @@ deferred to Stage 7. Reduced-motion regressions are release-blocking.
 
 ## Open questions resolved this session (no blockers remain)
 
-All six upstream decisions were grilled and locked (see "How this plan runs"): orchestration
-model, variant count/method, paper-tile generation, CONFIRMED semantics + backend scope, sound,
-and the first-run boundary. A 9-agent read-only audit this session also resolved the **"what
-about Stage 3?"** question — `stage3Complete: false`, home-only — and folded the completion into
-**Stage 0.5** within the Foundation session, per your request. **No open questions block starting
-Pre-flight.**
+Five upstream decisions are locked (see "How this plan runs"): orchestration model, variant
+count/method, paper-tile generation, sound (dropped), and the first-run boundary. The sixth —
+**CONFIRMED semantics + contact-backend scope** — is **no longer "out of scope"**: it is now a
+**deferred decision resolved at the Stage 4.8 gate** (real Resend backend vs validation-pass-only).
+The 9-agent audit's **"what about Stage 3?"** question (home-only, `stage3Complete: false`) was
+resolved and **completed** in the Foundation session (`5409bb1`).
 
-Two items are explicitly **deferred, not open**: the Resend contact backend (out of scope; a
-post-Stage-7 follow-up) and SEO discoverability (`seo-technical`/`seo-schema`/`seo-sitemap` —
-schedule after Stage 7 per the spec).
+One item stays **deferred, not open**: SEO discoverability
+(`seo-technical`/`seo-schema`/`seo-sitemap`) — schedule after Stage 7 (post-7: 8A content, 8B SEO).
 
 ---
 
-## Immediate next action on approval
+## Immediate next action
 
-1. Correct the **`stage3-status` memory** (it claims "Stages 0–3 done"; the truth is home-only —
-   `stage3Complete: false`, Stage 0.5 outstanding).
-2. Persist this doc to `jawad-designs/SHOWSTOPPER-EXECUTION-PLAN.md` and `git add` it.
-3. Bring up a served build and run the **Pre-flight finish-up workflow** above.
-4. Stop at the **Pre-flight gate** with the baselines + WebP tile for your review before the
-   **Foundation session (Stage 0 + 0.5)**.
+1. The stale **`stage3-status` memory** has been **corrected** and the clean base **committed**
+   (HEAD `764123a`). Pre-flight, Foundation (0 + 0.5), Stage 3.5, and Stage 3.7 are all done.
+2. **Run the Stage 4 menu-unfold workflow** (reusing the Stage 3.7 overlay) and **STOP at its
+   acceptance gate** for sign-off before Stage 4.8/5/6/7. Per-stage gating is preserved — no
+   monolith runs the remaining stages unattended.
