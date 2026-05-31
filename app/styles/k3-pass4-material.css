@@ -454,3 +454,61 @@ body[data-atmos="pronounced"] { --jd-vign: 0.82; --jd-spot-strength: 1.18; }
 .k3-crest__ring--inner { stroke: var(--brass); stroke-width: 1; opacity: 0.62; }
 /* the brass numeral anchor on Trust reads stronger so the void looks composed */
 .k2-trust__numeral { -webkit-text-stroke: 1px rgba(201,162,75,0.24); }
+
+/* ============================================================================
+   --- HERO CONTRAST PUSH
+   ----------------------------------------------------------------------------
+   Appended last so these win the cascade over the D3/D4 hero block above (same
+   selector specificity, later source order). Three cosmetic fixes only — no
+   structure, no timeline, no shader, no opacity (verify-stage2 stays green):
+     1 · the charger plate was dissolving into the charcoal — warmer centre +
+         a real outer ember glow + a brighter brass rim + a deeper hollow well.
+     2 · the candlelight pool read like a flat softbox — rebuilt as a 3-layer
+         PAR-can stack: tight hot core → warm wash → wide ambient falloff.
+     3 · the "WEBSITES" ink dead-ended brownish-grey — regraded white → warm
+         cream → gold so the top stays crisp and the foot presses warm.
+   All dark-scoped to .k3-hero--room; cream paper props untouched.
+   ========================================================================== */
+
+/* 1 · PLATE VISIBILITY — lift the charger off the black -------------------- */
+.k3-hero--room .k3-plate {
+  background: radial-gradient(ellipse at 50% 40%,
+    rgba(88,66,50,0.98), rgba(34,25,19,0.97) 66%, rgba(16,12,10,0) 72%);
+  box-shadow:
+    0 0 140px -20px rgba(255,170,90,0.22),        /* warm outer ember bloom  */
+    0 70px 130px -40px rgba(0,0,0,0.95);          /* deep directional drop   */
+}
+.k3-plate__rim {
+  box-shadow:
+    inset 0 0 0 1.5px rgba(214,176,92,0.95),       /* bright brass ring       */
+    inset 0 2px 0 0 rgba(255,248,230,0.75),        /* bone specular top edge  */
+    inset 0 5px 32px -4px rgba(255,218,158,0.55);  /* stronger warm inner fill*/
+}
+.k3-hero--room .k3-plate__well {
+  box-shadow: inset 0 0 60px -6px rgba(0,0,0,0.96); /* deeper hollow well     */
+}
+
+/* 2 · SPOTLIGHT DRAMA — a real PAR can on the table, not a softbox --------- */
+.k3-hero--room .k3-hero__spot {
+  background:
+    radial-gradient(22% 26% at 50% 46%, rgba(255,238,200,0.52), transparent), /* tight hot core   */
+    radial-gradient(44% 48% at 50% 46%, rgba(255,208,148,0.18), transparent), /* medium warm wash */
+    radial-gradient(70% 72% at 50% 46%, rgba(255,180,100,0.07), transparent); /* wide ambient     */
+}
+
+/* 3 · "WEBSITES" TEXT TREATMENT — white → cream → gold, high-contrast top -- */
+.k3-hero--room .k3-hero__big,
+.k3-hero--room .k3-hero__big .k3-hero__word,
+.k3-hero--room .k3-hero__big div {
+  background: linear-gradient(178deg, #FFFFFF 0%, #FFE8C8 30%, #E8C890 75%, #C8A060 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+/* keep the letterpress press under the regraded ink (paints from glyph shapes,
+   so it still shows beneath the transparent gradient fill) */
+.k3-hero--room .k3-hero__big .k3-hero__word,
+.k3-hero--room .k3-hero__big div {
+  text-shadow: 0 2px 2px rgba(50,12,6,0.85), 0 6px 22px rgba(0,0,0,0.65);
+}
