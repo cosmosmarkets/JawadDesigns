@@ -185,6 +185,36 @@
   color: var(--ember-text); /* AA text variant (≥4.5:1) — ember-as-text on the ash card */
   font-size: 14px;
 }
+/* Honeypot — off-screen, never painted, never announced. Not display:none so a
+   bot that "fills visible inputs" still sees it; humans never reach it. */
+.jd-contact__hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+/* On-page success ack — reuses the .jd-contact__card material; the Stage 5
+   CONFIRMED stamp will overlay this node once the ticket lands. */
+.jd-contact__ack {
+  gap: 14px;
+  text-align: left;
+}
+.jd-contact__ack-tag {
+  color: var(--brass-soft);
+}
+.jd-contact__ack-h {
+  font-size: clamp(32px, 5vw, 52px);
+  line-height: 0.98;
+}
+.jd-contact__ack-h:focus-visible {
+  outline: 2px solid var(--brass-soft);
+  outline-offset: 6px;
+}
+.jd-contact__ack-body {
+  color: var(--bone-dim);
+  max-width: 46ch;
+}
 
 /* ── Nav maître-d' subtext ─────────────────────────────────────────────
    Bronze hint above each desktop heading, revealed on hover/focus only.
