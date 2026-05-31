@@ -217,7 +217,7 @@ function TicketSurface({
       const root = scope.current;
       if (!root) return;
       return withMotion(() => {
-        const compact = window.matchMedia("(max-width: 1599.98px)").matches;
+        const compact = window.matchMedia("(max-width: 1439.98px)").matches;
         const tl = gsap.timeline();
         if (compact) {
           // pill mode: a small confirm-of-progress pop on the pill
@@ -254,7 +254,7 @@ function TicketSurface({
       const line = root?.querySelector<HTMLElement>(`[data-slot="CONFIRMED"]`);
       const paper = paperRef.current;
       const stamp = stampRef.current;
-      const compact = window.matchMedia("(max-width: 1599.98px)").matches;
+      const compact = window.matchMedia("(max-width: 1439.98px)").matches;
 
       if (prefersReducedMotion()) {
         if (line) gsap.set(line, { clearProps: "opacity,transform" });

@@ -27,9 +27,13 @@
 
   position: fixed;
   top: clamp(78px, 9vh, 104px);
-  right: 16px;
+  /* Auto-tuck into the right gutter: dock the rail's left edge AT the 1200px
+     wrap's right edge when there's room (flush, zero overlap on wide screens),
+     clamping to an 8px inset once the gutter runs out (~<1500px), so the worst
+     case is a small graze of the wrap's outer margin, never the reading column. */
+  right: max(8px, calc((100vw - 1200px) / 2 - 168px));
   z-index: 45; /* above atmosphere(40), below nav(60)/drawer(80)/veil(90) */
-  width: 176px;
+  width: 168px;
   pointer-events: none; /* never blocks content/CTA behind it */
 }
 
@@ -346,12 +350,12 @@
 
 /* ── breakpoints ──────────────────────────────────────────────────────────
    Rail only where the gutter clears the 1200px wrap; pill everywhere else. */
-@media (min-width: 1600px) {
+@media (min-width: 1440px) {
   .jd-ticket__rail {
     display: block;
   }
 }
-@media (max-width: 1599.98px) {
+@media (max-width: 1439.98px) {
   .jd-ticket__pill {
     display: flex;
   }
