@@ -23,6 +23,7 @@ import Link from "next/link";
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, withMotion } from "@/lib/motion";
+import { TicketBeacon } from "@/components/site/ticket";
 
 export function WorkFull() {
   const scope = useRef<HTMLElement>(null);
@@ -100,6 +101,8 @@ export function WorkFull() {
             <a href="https://weldapp.vercel.app" target="_blank" rel="noopener noreferrer" className="btn ghost">Visit weld <span className="arrow">→</span></a>
           </div>
         </div>
+        {/* SIGNATURE inks once you've read past the weld flagship case study */}
+        <TicketBeacon slot="SIGNATURE" />
         <div className="k3-hairline" aria-hidden />
         <div className="wrap k2-resv reveal" aria-label="One seat open this month">
           <div className="k2-resv__l">

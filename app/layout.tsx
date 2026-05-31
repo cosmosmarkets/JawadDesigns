@@ -13,12 +13,14 @@ import "./styles/k3-pass3.css";
 import "./styles/k3-pass4-material.css";
 import "./styles/k3-transition.css";
 import "./styles/k3-menu-unfold.css";
+import "./styles/k3-ticket.css";
 import { ThemeProvider } from "@/components/site/theme-provider";
 import { Atmosphere } from "@/components/site/atmosphere";
 import { Nav } from "@/components/site/nav";
 import { Footer } from "@/components/site/footer";
 import { SmoothScrollProvider } from "@/components/site/smooth-scroll-provider";
 import { RouteTransitionProvider } from "@/components/site/route-transition";
+import { TicketProvider } from "@/components/site/ticket";
 import { Analytics } from "@vercel/analytics/react";
 
 const bodoni = Bodoni_Moda({
@@ -100,8 +102,13 @@ export default function RootLayout({
           <SmoothScrollProvider />
           <Nav />
           {/* The veil overlay renders inside this provider as a sibling of
-              {children}, so it survives client-side navigation (Stage 0). */}
-          <RouteTransitionProvider>{children}</RouteTransitionProvider>
+              {children}, so it survives client-side navigation (Stage 0).
+              TicketProvider (Stage 5) wraps it so the per-page <TicketBeacon>s
+              can read inkSlot() via context; {children} is a stable element ref,
+              so ticket-state changes never re-render the route. */}
+          <TicketProvider>
+            <RouteTransitionProvider>{children}</RouteTransitionProvider>
+          </TicketProvider>
           <Footer />
           <Atmosphere />
         </ThemeProvider>

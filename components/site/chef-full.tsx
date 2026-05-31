@@ -25,6 +25,7 @@ import Link from "next/link";
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, withMotion } from "@/lib/motion";
+import { TicketBeacon } from "@/components/site/ticket";
 
 export function ChefFull() {
   const scope = useRef<HTMLElement>(null);
@@ -100,6 +101,8 @@ export function ChefFull() {
             <Link href="/contact" className="btn red">Work with me <span className="arrow">→</span></Link>
           </div>
         </div>
+        {/* THE RECIPE inks once you've read past the meet-the-chef story */}
+        <TicketBeacon slot="RECIPE" />
         <div className="k3-hairline" aria-hidden />
       </section>
     </main>

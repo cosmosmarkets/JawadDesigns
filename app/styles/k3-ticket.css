@@ -1,0 +1,381 @@
+/* ============================================================================
+   Stage 5 — the cross-route printing ticket (signature moment #3)
+   ----------------------------------------------------------------------------
+   A thermal kitchen ticket hanging from a right-edge rail just below the nav,
+   feeding DOWNWARD as funnel lines ink. Decorative + aria-hidden +
+   pointer-events:none → never blocks or traps the real content/CTA.
+
+   Desktop rail shows only ≥1600px, where it sits FULLY in the gutter beside the
+   1200px content wrap (gutter ≈200px ≥ rail 176px + 16px inset), so it never
+   overlaps the reading column. Below that it collapses to a tap-to-expand
+   progress pill bottom-right that stays clear of the CTA.
+
+   Thermal stock = thermal-paper-texture.svg (feed banding + speckle) + the
+   shared paper-fibre.webp tile (multiply ~8%, matching the menu booklet), a
+   torn perforated top edge (perforation-edge.svg), and a separate curl-shadow
+   layer. All colour from the k3 tokens; transform/opacity only, no transition-all.
+   Loaded after the other k3-* sheets in layout.tsx.
+   ========================================================================== */
+
+.jd-ticket {
+  /* thermal stock — cooler + lighter than the cream à-la-carte menu booklet */
+  --tk-paper: #f4f2ec;
+  --tk-paper-hi: #fbfaf6;
+  --tk-ink: #2a211a; /* warm near-black printed ink */
+  --tk-ink-soft: rgba(42, 33, 26, 0.6);
+  --tk-faint: rgba(42, 33, 26, 0.26); /* un-inked pre-print */
+
+  position: fixed;
+  top: clamp(78px, 9vh, 104px);
+  right: 16px;
+  z-index: 45; /* above atmosphere(40), below nav(60)/drawer(80)/veil(90) */
+  width: 176px;
+  pointer-events: none; /* never blocks content/CTA behind it */
+}
+
+/* ── the retracting lane ──────────────────────────────────────────────────
+   Kept SEPARATE from the paper so the footer-retract CSS transform never
+   fights the tear-off GSAP transform (which lives on .jd-ticket__paper). */
+.jd-ticket__rail {
+  display: none; /* shown only on the wide-desktop rail breakpoint */
+  position: relative;
+  transform: translateX(0);
+  opacity: 1;
+  transform-origin: top right;
+  transition: transform 0.5s var(--ease), opacity 0.45s var(--ease);
+  will-change: transform;
+}
+.jd-ticket[data-retracted="true"] .jd-ticket__rail {
+  transform: translateX(125%) rotate(1.5deg);
+  opacity: 0;
+}
+/* the CONFIRMED climax forces the rail back in regardless of the footer */
+.jd-ticket[data-confirming="true"] .jd-ticket__rail {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* torn perforated top edge — reads as paper emerging from a printer below nav */
+.jd-ticket__perf {
+  position: relative;
+  z-index: 2;
+  height: 14px;
+  margin-bottom: -1px;
+  background: url("/assets/showstopper/perforation-edge.svg") top left / 48px 20px repeat-x;
+  filter: drop-shadow(0 -3px 5px rgba(0, 0, 0, 0.32));
+}
+
+.jd-ticket__paper {
+  position: relative;
+  isolation: isolate;
+  padding: 15px 15px 4px;
+  color: var(--tk-ink);
+  font-family: var(--mono);
+  background-color: var(--tk-paper);
+  background-image:
+    linear-gradient(180deg, var(--tk-paper-hi), rgba(244, 242, 236, 0) 14%),
+    url("/assets/showstopper/thermal-paper-texture.svg");
+  background-repeat: no-repeat, repeat-y;
+  background-size: 100% 100%, 100% auto;
+  background-position: top center, top center;
+  /* float off the right edge of the dark room + a faint candle catch */
+  box-shadow:
+    0 30px 60px -28px rgba(0, 0, 0, 0.7),
+    0 8px 18px -10px rgba(0, 0, 0, 0.55),
+    0 0 40px -18px var(--ember-glow),
+    inset 0 0 0 1px rgba(120, 90, 40, 0.12);
+  will-change: transform, opacity;
+}
+/* shared paper-fibre tile, multiply ~8% (same material as the menu booklet) */
+.jd-ticket__paper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.08;
+  mix-blend-mode: multiply;
+  background: url("/assets/showstopper/paper-fibre.webp") top center / 200px 200px repeat;
+}
+/* faint contact darkening at the very bottom edge (paper meeting the curl) */
+.jd-ticket__paper::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 16px;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.1));
+}
+
+/* head */
+.jd-ticket__head {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-align: center;
+}
+.jd-ticket__brand {
+  font-family: var(--headline);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  color: var(--tk-ink);
+}
+.jd-ticket__meta {
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--tk-ink-soft);
+}
+
+.jd-ticket__rule {
+  height: 0;
+  border-top: 1px dashed rgba(42, 33, 26, 0.3);
+  margin: 11px 0 10px;
+}
+.jd-ticket__rule--dashed {
+  margin: 10px 0 9px;
+}
+
+/* lines — pre-printed faint, ink to full on reach */
+.jd-ticket__lines {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.jd-ticket__line {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--tk-faint);
+  transition: color 0.45s var(--ease);
+}
+.jd-ticket__line.is-inked {
+  color: var(--tk-ink);
+}
+.jd-ticket__box {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  margin-top: 1px;
+  border: 1px solid rgba(42, 33, 26, 0.4);
+  border-radius: 2px;
+  display: grid;
+  place-items: center;
+  font-size: 9px;
+  line-height: 1;
+  color: transparent;
+  transition: background-color 0.45s var(--ease), border-color 0.45s var(--ease),
+    color 0.45s var(--ease);
+}
+.jd-ticket__line.is-inked .jd-ticket__box {
+  background: var(--ember);
+  border-color: var(--ember);
+  color: #fff;
+}
+.jd-ticket__line-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.jd-ticket__label {
+  font-family: var(--display);
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+.jd-ticket__sub {
+  font-size: 8.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tk-ink-soft);
+}
+.jd-ticket__line:not(.is-inked) .jd-ticket__sub {
+  color: var(--tk-faint);
+}
+
+/* foot */
+.jd-ticket__foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 6px;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tk-ink-soft);
+}
+
+/* curl shadow — separate layer, paper curling away from the wall at the bottom */
+.jd-ticket__curl {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -13px;
+  height: 22px;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(72% 100% at 50% 0%, rgba(0, 0, 0, 0.5), transparent 72%);
+  transform: scaleY(0.7);
+  transform-origin: top;
+}
+
+/* CONFIRMED stamp — a rubber stamp pressed at an angle over the lower ticket.
+   Hidden at rest (GSAP/CSS reveal on CONFIRMED); ink multiplies into the stock. */
+.jd-ticket__stamp {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%) rotate(-8deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 7px 12px;
+  color: var(--ember);
+  border: 2px solid var(--ember);
+  border-radius: 6px;
+  background: rgba(210, 70, 47, 0.05);
+  box-shadow: inset 0 0 0 1px rgba(210, 70, 47, 0.35);
+  mix-blend-mode: multiply;
+  opacity: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.jd-ticket__stamp-top {
+  font-size: 8px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+.jd-ticket__stamp-big {
+  font-family: var(--display);
+  font-size: 25px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 0.9;
+}
+.jd-ticket__stamp-date {
+  font-size: 7.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+/* ── compact progress pill (bottom-right) ─────────────────────────────────── */
+.jd-ticket__pill {
+  display: none; /* shown only on compact widths */
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 45;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 13px;
+  border-radius: 999px;
+  font-family: var(--mono);
+  color: var(--tk-ink);
+  background: linear-gradient(180deg, var(--tk-paper-hi), #f0eee8);
+  box-shadow:
+    0 14px 30px -16px rgba(0, 0, 0, 0.72),
+    0 0 0 1px rgba(120, 90, 40, 0.18),
+    0 0 24px -14px var(--ember-glow);
+  pointer-events: auto; /* the one tappable part of the device (decorative nicety) */
+  cursor: pointer;
+  transform-origin: bottom right;
+  transition: transform 0.45s var(--ease), opacity 0.4s var(--ease);
+}
+.jd-ticket[data-retracted="true"] .jd-ticket__pill {
+  transform: translateY(150%);
+  opacity: 0;
+  pointer-events: none;
+}
+.jd-ticket[data-confirming="true"] .jd-ticket__pill {
+  transform: none;
+  opacity: 1;
+}
+.jd-ticket__pill-prog {
+  display: inline-grid;
+  place-items: center;
+  min-width: 30px;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: var(--ember);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+.jd-ticket__pill-label {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--tk-ink-soft);
+}
+/* expanded mini-ticket — a compact line list above the pill chrome */
+.jd-ticket__pill.is-expanded {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+.jd-ticket__pill-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 4px;
+  border-top: 1px dashed rgba(42, 33, 26, 0.28);
+  width: 100%;
+}
+.jd-ticket__pill-row {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tk-faint);
+}
+.jd-ticket__pill-row.is-inked {
+  color: var(--tk-ink);
+}
+
+/* ── breakpoints ──────────────────────────────────────────────────────────
+   Rail only where the gutter clears the 1200px wrap; pill everywhere else. */
+@media (min-width: 1600px) {
+  .jd-ticket__rail {
+    display: block;
+  }
+}
+@media (max-width: 1599.98px) {
+  .jd-ticket__pill {
+    display: flex;
+  }
+}
+
+/* ── reduced motion — no slide/feed/press; lines + stamp render at rest ───── */
+@media (prefers-reduced-motion: reduce) {
+  .jd-ticket__rail,
+  .jd-ticket__pill,
+  .jd-ticket__line,
+  .jd-ticket__box {
+    transition: none;
+  }
+}
+body[data-motion="off"] .jd-ticket__rail,
+body[data-motion="off"] .jd-ticket__pill,
+body[data-motion="off"] .jd-ticket__line,
+body[data-motion="off"] .jd-ticket__box {
+  transition: none;
+}
+
+/* the invisible scroll-earned beacon dropped at each page's key section */
+.jd-ticket-beacon {
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}

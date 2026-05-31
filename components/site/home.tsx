@@ -4,6 +4,7 @@
 // Footer live in app/layout.tsx; the order modal was replaced by /contact.
 
 import { Hero } from "./sections/hero";
+import { TicketBeacon } from "./ticket";
 import { Trust } from "./sections/trust";
 import { WorkTeaser } from "./sections/work-teaser";
 import { ChefTeaser } from "./sections/chef-teaser";
@@ -17,6 +18,8 @@ export function Home() {
     <main>
       <Hero />
       <Trust />
+      {/* SEATED inks once you've scrolled past the trust band (home key section) */}
+      <TicketBeacon slot="SEATED" />
       <WorkTeaser />
       <div className="k3-hairline" aria-hidden />
       <ChefTeaser />

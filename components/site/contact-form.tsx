@@ -7,6 +7,7 @@ import { useGSAP } from "@gsap/react";
 import { gsap, SplitText, withMotion } from "@/lib/motion";
 import { TIERS } from "./menu-full";
 import { contactSchema, type ContactInput, HONEYPOT_FIELD } from "@/lib/contact-schema";
+import { ORDER_CONFIRMED_EVENT, type OrderConfirmedDetail } from "@/lib/ticket-state";
 
 /* Real /contact page — the replacement for the old order modal. Dish chips mirror
    the menu tiers so a /contact?dish=… deep-link from a tier CTA preselects.
@@ -25,11 +26,11 @@ const DISHES = TIERS.map((t) => t.name);
 const schema = contactSchema;
 type FormValues = ContactInput;
 
-/** Event the Stage 5 ticket listens on. Detail is the minimum the ticket needs
-    — the dish for context; NO email (the address is captured server-side via
-    Resend, never re-broadcast to same-origin listeners). */
-export const ORDER_CONFIRMED_EVENT = "jd:order-confirmed";
-export type OrderConfirmedDetail = { dish: string };
+/** The Stage 5 ticket's CONFIRMED seam now lives in lib/ticket-state (single
+    source for both the form that fires it and the provider that listens).
+    Re-exported here so existing importers of this module keep working. */
+export { ORDER_CONFIRMED_EVENT };
+export type { OrderConfirmedDetail };
 
 export function ContactForm() {
   const scope = useRef<HTMLElement>(null);
