@@ -1,0 +1,437 @@
+/* ============================================================================
+   Stage 4 — the home menu unfold (gatefold, winning variant B)
+   ----------------------------------------------------------------------------
+   Two scopes, no cross-file edits beyond the layout import:
+     1. .ub-card  — the CLOSED folded printed menu that IS the home centerpiece
+                    (replaces the old inline TierGrid in MenuPreview).
+     2. .jd-veil[data-variant^="unfold"] .ub-spread — the gatefold spread injected
+        into the SHARED route-transition overlay (Stage 3.7) during the transition
+        only. Scoped under the provider's data-variant hook so it never touches
+        the baseline veil.
+
+   transform / opacity ONLY (no width/height/top/left, no transition-all). All
+   colour from the k3 tokens (--char/--ember/--brass/--gold/--bone); no hardcoded
+   hex outside translucent rgba shadows, matching the design system.
+
+   Loaded after k3-transition.css in layout.tsx so the spread overrides win over
+   the baseline veil styles when [data-variant^="unfold"] is set.
+   ========================================================================== */
+
+/* ── shared cream "stock" the cover + the spread both print on ─────────────── */
+.ub-card,
+.jd-veil[data-variant^="unfold"] .ub-spread__leaf {
+  /* the contained cream paper prop, mirroring .k3-paper's local token flip */
+  --paper-1: #fbead0;
+  --paper-2: #fff7e8;
+  --paper-edge: #efd9b6;
+  --ink: #241c14;
+  --ink-soft: #6b5e4e;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   1 · THE CLOSED FOLDED MENU (home centerpiece)
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* perspective host so the hover lift + inner-edge peek read with real depth */
+.ub-stage {
+  display: flex;
+  justify-content: center;
+  perspective: 1800px;
+}
+
+/* the cover is a real <a> — keep it interactive, focusable, gracefully no-JS */
+.ub-card {
+  position: relative;
+  display: block;
+  width: min(520px, 92vw);
+  /* a tall, folded à-la-carte menu — golden-ratio-ish portrait card */
+  aspect-ratio: 5 / 7;
+  border-radius: 3px;
+  text-align: center;
+  color: var(--ink);
+  background:
+    radial-gradient(120% 90% at 50% 8%, var(--paper-2), transparent 60%),
+    linear-gradient(160deg, var(--paper-1) 0%, var(--paper-edge) 100%);
+  transform-style: preserve-3d;
+  transform-origin: 50% 60%;
+  /* spring-style lift on hover/focus — transform + box-shadow only */
+  transition: transform 0.5s var(--ease), box-shadow 0.6s var(--ease);
+  box-shadow:
+    0 30px 64px -34px rgba(0, 0, 0, 0.62),
+    0 6px 18px -10px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 0 0 1px rgba(165, 128, 52, 0.28);
+  isolation: isolate;
+}
+
+/* faint printed-stock grain — paper-fibre.webp multiply ~8% (per the brief) */
+.ub-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.08;
+  mix-blend-mode: multiply;
+  background-image: url("/assets/showstopper/paper-fibre.webp");
+  background-size: 260px 260px;
+  z-index: 2;
+}
+
+/* the centre fold crease + the inner-edge "peek" of the gatefold leaves, so the
+   closed card reads as a double-fold waiting to open. A hairline gutter shadow
+   down the spine + two faint flanking creases (the gatefold's quarter folds). */
+.ub-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    linear-gradient(90deg, transparent 49.2%, rgba(60, 40, 15, 0.16) 50%, transparent 50.8%),
+    linear-gradient(90deg, transparent 24.5%, rgba(60, 40, 15, 0.07) 25%, transparent 25.5%),
+    linear-gradient(90deg, transparent 74.5%, rgba(60, 40, 15, 0.07) 75%, transparent 75.5%);
+  /* the right gatefold leaf peeks a hair proud of the left — a real edge */
+  box-shadow: inset -2px 0 6px -3px rgba(60, 40, 15, 0.22);
+}
+
+.ub-card:hover,
+.ub-card:focus-visible {
+  transform: translateY(-8px) rotateX(5deg) scale(1.012);
+  box-shadow:
+    0 56px 104px -44px rgba(0, 0, 0, 0.7),
+    0 14px 30px -14px rgba(0, 0, 0, 0.55),
+    0 0 64px -30px var(--ember-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 0 0 1px rgba(165, 128, 52, 0.42);
+}
+.ub-card:focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 6px;
+}
+.ub-card:active {
+  transform: translateY(-3px) scale(1.004);
+}
+
+/* inner content of the closed cover, lifted above the grain/crease layers */
+.ub-card__inner {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  padding: clamp(34px, 5vw, 60px) clamp(26px, 4.5vw, 52px);
+}
+
+/* faint deckled edge (per the locked decision) */
+.ub-card__deckle {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0.5;
+  background-image: url("/assets/showstopper/deckled-edge.svg");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  mix-blend-mode: multiply;
+}
+
+.ub-card__eyebrow {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.ub-card__crest {
+  width: clamp(72px, 11vw, 104px);
+  height: auto;
+  margin: clamp(16px, 2.4vw, 26px) auto clamp(14px, 2vw, 22px);
+  /* press the brass crest INTO the stock */
+  filter: drop-shadow(0 1px 0 rgba(255, 250, 236, 0.6))
+    drop-shadow(0 -1px 1px rgba(60, 40, 15, 0.22));
+}
+
+/* letterpress title — warm top plate over a dark press, no diffuse halo */
+.ub-card__title {
+  font-family: var(--headline);
+  font-weight: 600;
+  line-height: 0.96;
+  letter-spacing: -0.015em;
+  font-size: clamp(34px, 6vw, 58px);
+  color: var(--ink);
+  text-shadow:
+    0 1px 0 rgba(255, 250, 236, 0.7),
+    0 -1px 1px rgba(60, 40, 15, 0.25);
+}
+.ub-card__title em {
+  font-style: italic;
+  font-weight: 500;
+  display: block;
+}
+
+.ub-card__rule {
+  width: 62px;
+  height: 1px;
+  margin: clamp(16px, 2.2vw, 24px) auto;
+  background: var(--hair-2);
+  box-shadow: 0 1px 0 rgba(255, 250, 236, 0.5);
+}
+
+/* the three anchor tier names + "from $X", letterpressed on the cover. The
+   prices are IMPORTED from TIERS in the component — this is layout only. */
+.ub-card__anchors {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1.3vw, 13px);
+  width: 100%;
+  max-width: 340px;
+  margin-inline: auto;
+}
+.ub-card__anchor {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: var(--headline);
+  font-size: clamp(15px, 1.9vw, 18px);
+  color: var(--ink);
+}
+.ub-card__anchor-name {
+  white-space: nowrap;
+}
+.ub-card__anchor-leader {
+  flex: 1;
+  height: 0;
+  border-bottom: 1px dotted rgba(60, 40, 15, 0.35);
+  transform: translateY(-3px);
+}
+.ub-card__anchor-price {
+  font-family: var(--mono);
+  font-size: clamp(12px, 1.5vw, 14px);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  color: var(--ink-soft);
+}
+
+/* the clear "View the menu — pricing inside" affordance + inner-edge peek */
+.ub-card__open {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: clamp(18px, 2.6vw, 28px);
+  font-family: var(--display);
+  font-size: clamp(15px, 1.7vw, 18px);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-shadow: 0 1px 0 rgba(255, 250, 236, 0.6);
+}
+.ub-card__open .ub-card__arrow {
+  font-family: var(--body);
+  font-weight: 600;
+  transition: transform 0.5s var(--ease);
+}
+.ub-card:hover .ub-card__arrow,
+.ub-card:focus-visible .ub-card__arrow {
+  transform: translateX(5px);
+}
+.ub-card__note {
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   2 · THE GATEFOLD SPREAD (injected into the SHARED overlay during transit)
+   ── scoped under the provider's data-variant hook ──────────────────────────
+   Two panels hinge open from the centre spine (gatefold). At rest (closed) each
+   panel is rotated 90° about its spine edge so the spread is edge-on (occludes
+   nothing yet); cover() swings them flat to 0° → the two cream leaves fill the
+   viewport and fully occlude. The gutter strip behind carries the pricing,
+   revealed as the leaves part open.
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* The provider sets autoAlpha:1 on the veil during a custom cover (the unfold
+   component does gsap.set(overlay,{autoAlpha:1}) before animating children), so
+   the spread is visible. Make the veil itself OPAQUE CHARCOAL behind the spread
+   so the seam at full occlusion is seamless (never a white flash). */
+.jd-veil[data-variant^="unfold"] {
+  background: var(--char);
+}
+
+.ub-spread {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  perspective: 2200px;
+  perspective-origin: 50% 50%;
+  z-index: 4;
+}
+
+/* the gutter — the dark spine the two leaves part over; carries the pricing.
+   Sits BEHIND the leaves (lower z within preserve-3d via translateZ) so the
+   pricing is "revealed in the gutter" as the panels swing. */
+.ub-spread__gutter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 2vw, 26px);
+  padding: var(--pad-x);
+  text-align: center;
+  transform: translateZ(-40px);
+  background:
+    radial-gradient(70% 60% at 50% 46%, rgba(86, 44, 20, 0.5), transparent 70%),
+    radial-gradient(140% 110% at 50% 46%, #150c06 34%, var(--char) 100%);
+}
+.ub-spread__kicker {
+  font-family: var(--mono);
+  font-size: clamp(11px, 1.1vw, 13px);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+.ub-spread__pricing {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1vw, 12px);
+  width: min(440px, 80vw);
+}
+.ub-spread__price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  font-family: var(--headline);
+  font-size: clamp(18px, 2.6vw, 28px);
+  color: var(--bone);
+}
+.ub-spread__price-row span:first-child {
+  white-space: nowrap;
+}
+.ub-spread__price-lead {
+  flex: 1;
+  height: 0;
+  border-bottom: 1px dotted var(--hair-2);
+  transform: translateY(-5px);
+}
+.ub-spread__price-num {
+  font-family: var(--display);
+  letter-spacing: 0.02em;
+  color: var(--gold);
+  white-space: nowrap;
+}
+
+/* the two parting leaves. Each pivots on the centre spine so they read as one
+   folded sheet opening — the gatefold gesture. preserve-3d + backface-hidden so
+   the cream face never flips translucent mid-swing. */
+.ub-spread__leaf {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  background:
+    radial-gradient(120% 90% at 50% 0%, var(--paper-2), transparent 62%),
+    linear-gradient(160deg, var(--paper-1) 0%, var(--paper-edge) 100%);
+  z-index: 5;
+  will-change: transform;
+}
+.ub-spread__leaf::before {
+  /* printed-stock grain on each leaf — paper-fibre.webp multiply ~8% */
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.08;
+  mix-blend-mode: multiply;
+  background-image: url("/assets/showstopper/paper-fibre.webp");
+  background-size: 280px 280px;
+}
+.ub-spread__leaf--l {
+  left: 0;
+  transform-origin: right center; /* hinge on the centre spine */
+}
+.ub-spread__leaf--r {
+  right: 0;
+  transform-origin: left center; /* hinge on the centre spine */
+}
+
+/* tracked drop shadow that lives on the leaf's parting edge — a separate
+   absolutely-positioned strip animated via transform/opacity by GSAP (cheaper
+   than animating box-shadow). It darkens the gutter as the leaves close and
+   lifts as they part, selling the fold's contact shadow. */
+.ub-spread__leaf-shadow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 22%;
+  pointer-events: none;
+  z-index: 6;
+}
+.ub-spread__leaf--l .ub-spread__leaf-shadow {
+  right: 0;
+  background: linear-gradient(90deg, transparent, rgba(20, 12, 6, 0.55));
+}
+.ub-spread__leaf--r .ub-spread__leaf-shadow {
+  left: 0;
+  background: linear-gradient(270deg, transparent, rgba(20, 12, 6, 0.55));
+}
+
+/* a faint cover impression printed across the closed leaves (centre title
+   halves), so at full occlusion the spread still reads as "the menu", not a
+   blank sheet. Each half shows on its own leaf. */
+.ub-spread__face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0.9;
+}
+.ub-spread__face-title {
+  font-family: var(--headline);
+  font-weight: 600;
+  font-style: italic;
+  font-size: clamp(40px, 8vw, 96px);
+  color: var(--ink, #241c14);
+  text-shadow:
+    0 1px 0 rgba(255, 250, 236, 0.6),
+    0 -1px 1px rgba(60, 40, 15, 0.22);
+}
+.ub-spread__leaf--l .ub-spread__face { justify-content: flex-end; }
+.ub-spread__leaf--r .ub-spread__face { justify-content: flex-start; }
+
+/* ── MOBILE / coarse-pointer: drop CSS 3D, simplified 2D cover-slide ─────────
+   Per the locked decision. The leaves still slide in from the two edges to full
+   occlusion (transform: translateX only), no rotateY/perspective cost. The
+   component reads matchMedia at gesture time and drives translateX instead. */
+@media (hover: none), (max-width: 720px) {
+  .ub-stage { perspective: none; }
+  .ub-card { transform-style: flat; }
+  .ub-card:hover,
+  .ub-card:focus-visible { transform: translateY(-6px) scale(1.01); }
+
+  .jd-veil[data-variant^="unfold"] .ub-spread { perspective: none; }
+  .jd-veil[data-variant^="unfold"] .ub-spread__leaf { transform-style: flat; }
+  /* GSAP drives translateX on mobile (set in the component) rather than rotateY */
+}
+
+/* reduced motion safety net: the provider already bypasses the unfold entirely
+   (instant nav, no veil) under reduced motion, so the spread is never injected.
+   This belt-and-braces rule kills the cover lift transition if it ever shows. */
+@media (prefers-reduced-motion: reduce) {
+  .ub-card { transition: none; }
+}
