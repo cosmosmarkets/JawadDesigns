@@ -348,3 +348,109 @@ body[data-atmos="pronounced"]  { --jd-vign: 0.78; --jd-spot-strength: 1.05; }
 
 /* Guestbook signed card edge replaces the old hairline borders */
 .k2-guest__inner.k3-paper { border-top: 0; border-bottom: 0; padding: clamp(30px,4vw,52px); }
+
+/* ============================================================================
+   STAGE 3.5 — MATERIAL DEPTH PUSH (appended last; cascade wins)
+   ----------------------------------------------------------------------------
+   The 3.5 containment landed the cream cards, but the DARK register still reads
+   flat: uniform charcoal fields, a candlelight pool too weak to model light, a
+   ghost charger, flat-bone giant type, and dark-on-dark props. This block models
+   light in the dark room — stronger/layered pool, a directional room gradient,
+   a charger that catches, dimensional headline ink, ember-separated dark props.
+   TUNING ONLY: no palette tokens, no copy/layout, no motion/timeline rebuild.
+   Cream .k3-paper props untouched (all dark-scoped). verify-stage2/3 stay green.
+   ========================================================================== */
+
+/* --- D1 · push the atmosphere presets up so the room is actually lit -------- */
+body[data-atmos="pronounced"] { --jd-vign: 0.82; --jd-spot-strength: 1.18; }
+
+/* candlelight pool — a TIGHT hot core layered over a WIDER warm wash, so it
+   sculpts a centre AND gives the surrounding dark a falloff (not a flat field).
+   Keeps the --jd-spot-bias term verify-stage3 asserts changes across the scrub. */
+.jd-atmos__spot {
+  background:
+    radial-gradient(26% 22% at 50% calc(var(--jd-spot-y) + var(--jd-spot-bias, 0%)),
+      rgba(255,228,176,0.30), rgba(255,206,150,0.10) 44%, transparent 64%),
+    radial-gradient(64% 58% at 50% calc(var(--jd-spot-y) + var(--jd-spot-bias, 0%)),
+      rgba(255,196,128,0.085), transparent 70%);
+}
+/* vignette — deeper, warmer mid so the frame falls into candle-shadow harder */
+.jd-atmos__vign {
+  background: radial-gradient(116% 92% at 50% calc(var(--jd-spot-y) + var(--jd-spot-bias, 0%)),
+    transparent 18%, rgba(28,15,7,0.62) 54%, rgba(14,8,3,0.92) 100%);
+}
+
+/* --- D2 · model the dark grounds — a faint top-lit warm sheen so each dark
+   section reads as a lit surface in a room, not a flat block. Dark-scoped:
+   .k3-paper (cream) and .k3-light re-tokenise locally and are excluded. ------- */
+/* z-index:-1 → paints over the section's opaque charcoal bg but UNDER all
+   in-flow content, so it never fights intentional z-0 props (Trust numeral,
+   parallax bg layers) and needs no per-child z-index lift. */
+.sec:not(.k3-light)::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(140% 70% at 50% -8%, rgba(255,196,140,0.05), transparent 46%),
+    linear-gradient(180deg, rgba(255,210,160,0.035), transparent 22%,
+      transparent 72%, rgba(0,0,0,0.34));
+}
+/* the hero owns its own lighting stack — don't double-wash it */
+.k2-hero.sec::after, .k3-hero::after { content: none; }
+
+/* --- D3 · HERO — let the charger catch the light (cosmetic only) ------------ */
+/* tighter, warmer pool biased onto the plate centre so the brass rim separates */
+.k3-hero--room .k3-hero__spot {
+  background:
+    radial-gradient(30% 34% at 50% 46%, rgba(255,232,194,0.26), transparent 60%),
+    radial-gradient(52% 56% at 50% 47%, rgba(255,198,140,0.08), transparent 72%);
+}
+/* lift the charger off the black: warmer centre + a real specular crest */
+.k3-hero--room .k3-plate {
+  background: radial-gradient(ellipse at 50% 40%,
+    rgba(74,56,44,0.95), rgba(30,22,17,0.97) 66%, rgba(16,12,10,0) 72%);
+  box-shadow: 0 70px 130px -54px rgba(0,0,0,0.92), 0 0 90px -30px rgba(255,180,120,0.16);
+}
+.k3-plate__rim {
+  box-shadow:
+    inset 0 0 0 1px rgba(214,176,92,0.72),
+    inset 0 2px 0 0 rgba(255,246,226,0.62),
+    inset 0 4px 22px -5px rgba(255,214,154,0.44);
+}
+.k3-hero--room .k3-plate__well {
+  box-shadow: inset 0 0 48px -8px rgba(0,0,0,0.9), inset 0 1px 0 rgba(214,176,92,0.32);
+}
+
+/* --- D4 · dimensional headline ink — the giant serif gets a top-lit vertical
+   grade instead of a flat bone fill. Applied to the split char <div>s too (they
+   inherit nothing useful), with ONE crisp dark press beneath so it reads as
+   pressed metal type, not hollow outline. ----------------------------------- */
+.k3-hero--room .k3-hero__big,
+.k3-hero--room .k3-hero__big .k3-hero__word,
+.k3-hero--room .k3-hero__big div {
+  background: linear-gradient(176deg, #FFF3E2 8%, #EAD9C4 48%, #C9B49C 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+/* one tight dark press under the transparent ink → embossed, not floating.
+   text-shadow (cheap) over filter:drop-shadow (expensive on 360px text → stalls
+   fullPage raster). text-shadow paints from glyph shapes, so it still shows
+   beneath the -webkit-text-fill-color:transparent gradient ink. */
+.k3-hero--room .k3-hero__big .k3-hero__word,
+.k3-hero--room .k3-hero__big div {
+  text-shadow: 0 2px 1px rgba(60,16,9,0.7), 0 5px 16px rgba(0,0,0,0.55);
+}
+
+/* --- D5 · separate the dark props from the ground (ember rim on edges) ------ */
+.k3-chef__crest {
+  background: radial-gradient(122% 92% at 50% 16%, #2c2019, #14100d 72%);
+  box-shadow:
+    inset 0 0 0 1px rgba(201,162,75,0.38),
+    inset 0 1px 0 rgba(255,214,158,0.18),
+    0 44px 96px -44px #000,
+    0 0 84px -26px var(--ember-glow);
+}
+.k3-crest__ring { stroke: var(--brass-soft); stroke-width: 1.6; opacity: 1; }
+.k3-crest__ring--inner { stroke: var(--brass); stroke-width: 1; opacity: 0.62; }
+/* the brass numeral anchor on Trust reads stronger so the void looks composed */
+.k2-trust__numeral { -webkit-text-stroke: 1px rgba(201,162,75,0.24); }
