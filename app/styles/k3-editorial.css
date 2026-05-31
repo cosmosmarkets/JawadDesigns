@@ -1,0 +1,364 @@
+/* ============================================================================
+   Stage 6 — Editorial layout tension (the "safe" sections + the pricing grid)
+   ----------------------------------------------------------------------------
+   Breaks the four symmetrical sections into ONE asymmetric editorial system
+   across two routes: Trust (home) and Why / TierGrid / Pantry (/menu), with the
+   Chef's Table tier visually dominant. Imported LAST in app/layout.tsx so it's a
+   clean, cheap rollback. All rules scoped under per-section modifiers so nothing
+   else reflows. Token-driven only (palette + --baseline); no hardcoded hex.
+
+   Locked decisions (2026-05-31): TierGrid = hero band + supporting row;
+   --baseline rhythm token; kinetic numbers reuse the shipped .parallax +
+   .reveal-lines only (no new GSAP). Asymmetry is pure CSS → static-safe under
+   reduced motion / no-JS. Desktop ≥901px gets the broken grid; ≤900px collapses
+   to a clean single column with the flagship first.
+
+   Vertical rhythm helper: spacing values are calc(var(--baseline) * n).
+   ========================================================================== */
+
+/* ════════════════════════════════════════════════════════════════════════
+   1 · TIERGRID — "Hero band + supporting row" (the bespoke hero of /menu)
+   ════════════════════════════════════════════════════════════════════════
+   Chef's Table (rank 2, .is-flag) is pulled out of the uniform map and rendered
+   as a full-width dominant BAND; À la carte + Tasting Menu sit beneath as a
+   subordinate 2-up row. */
+.k2-menu__grid--editorial {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--baseline) * 4); /* 32px */
+  align-items: stretch;
+}
+
+/* ── the dominant band ─────────────────────────────────────────────────── */
+.k2-tier--band.is-flag {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "head feat"
+    "price feat";
+  column-gap: calc(var(--baseline) * 7); /* 56px */
+  row-gap: calc(var(--baseline) * 3);
+  align-items: start;
+  transform: none; /* the band owns full width — no column lift */
+  padding: calc(var(--baseline) * 5) calc(var(--baseline) * 6) calc(var(--baseline) * 5);
+  border: 1px solid rgba(234, 209, 138, 0.55);
+  border-radius: 10px;
+  background:
+    radial-gradient(120% 140% at 100% 0%, rgba(234, 209, 138, 0.12), transparent 52%),
+    linear-gradient(165deg, #241b13 0%, var(--char) 70%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 226, 168, 0.18),
+    inset 0 0 0 1px rgba(234, 209, 138, 0.18),
+    0 44px 110px -44px rgba(234, 209, 138, 0.3),
+    0 0 90px -40px var(--ember-glow);
+  overflow: hidden;
+}
+.k2-tier--band.is-flag .k2-tier__band-head {
+  grid-area: head;
+}
+.k2-tier--band.is-flag .k2-tier__band-price {
+  grid-area: price;
+  display: flex;
+  align-items: baseline;
+  gap: calc(var(--baseline) * 1.5);
+  align-self: end;
+}
+.k2-tier--band.is-flag .k2-tier__band-feat {
+  grid-area: feat;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--baseline) * 2.5);
+  align-self: center;
+  padding-left: calc(var(--baseline) * 5);
+  border-left: 1px solid var(--hair-2);
+}
+.k2-tier--band .k2-tier__tag {
+  color: var(--gold);
+  letter-spacing: 0.26em;
+}
+.k2-tier--band .k2-tier__name {
+  font-size: clamp(46px, 6vw, 92px);
+  line-height: 0.92;
+  color: var(--gold);
+  margin-top: calc(var(--baseline) * 1.5);
+}
+.k2-tier--band .k2-tier__why {
+  margin-top: calc(var(--baseline) * 2);
+  max-width: 42ch;
+  font-size: clamp(16px, 1.4vw, 19px);
+  border-bottom: 0;
+}
+/* the kinetic hero number — big gold display, drifts via the shipped .parallax */
+.k2-tier--band .k2-tier__num {
+  font-size: clamp(72px, 9vw, 150px);
+  line-height: 0.78;
+  color: var(--gold);
+}
+.k2-tier--band .k2-tier__from {
+  font-size: 14px;
+  color: rgba(234, 209, 138, 0.7);
+}
+.k2-tier--band .k2-tier__feat {
+  gap: calc(var(--baseline) * 1.5);
+  font-size: 16px;
+  margin: 0;
+}
+.k2-tier--band .k2-tier__feat span {
+  color: var(--gold);
+}
+.k2-tier--band .k2-tier__cta {
+  align-self: flex-start;
+  margin-top: calc(var(--baseline) * 1);
+}
+/* gold flag re-anchored to the band's top-left corner */
+.k2-tier--band .k2-tier__ribbon.flag {
+  position: absolute;
+  top: 0;
+  left: calc(var(--baseline) * 6);
+  transform: translateY(-50%);
+}
+/* a slow gold sheen sweeping the band — the "shimmer". transform-only; killed
+   under reduced motion. Sits above the bg, below the content. */
+.k2-tier--band.is-flag::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -40%;
+  width: 36%;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent, rgba(255, 232, 176, 0.07) 50%, transparent);
+  transform: skewX(-14deg);
+  animation: k2-tier-sheen 7s var(--ease) infinite;
+}
+@keyframes k2-tier-sheen {
+  0%, 22% { transform: translateX(0) skewX(-14deg); opacity: 0; }
+  40% { opacity: 1; }
+  68%, 100% { transform: translateX(420%) skewX(-14deg); opacity: 0; }
+}
+
+/* ── the subordinate 2-up row ──────────────────────────────────────────── */
+.k2-menu__subrow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: calc(var(--baseline) * 4);
+}
+.k2-tier--mini {
+  transform: none !important; /* no lift — clearly secondary to the band */
+  padding: calc(var(--baseline) * 4) calc(var(--baseline) * 4) calc(var(--baseline) * 3.5);
+  gap: calc(var(--baseline) * 1.5);
+}
+.k2-tier--mini .k2-tier__name {
+  font-size: clamp(28px, 2.6vw, 40px);
+}
+.k2-tier--mini .k2-tier__num {
+  font-size: clamp(40px, 4vw, 60px);
+}
+.k2-tier--mini.is-feat {
+  background: var(--char-2);
+  box-shadow: inset 0 0 0 1px var(--hair-2);
+}
+.k2-tier--mini .k2-tier__feat {
+  font-size: 15px;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   2 · MENU MASTHEAD — de-centre it + the one /menu script flourish
+   ════════════════════════════════════════════════════════════════════════ */
+.k2-menu--ed .k2-menu__head {
+  max-width: none;
+  align-items: flex-start;
+  text-align: left;
+  margin-bottom: calc(var(--baseline) * 7);
+}
+.k2-menu--ed .k2-menu__title {
+  display: flex;
+  flex-direction: column;
+  line-height: 0.9;
+}
+/* "dine" set in the refined Pinyon script — the single /menu script accent */
+.k2-menu--ed .k2-menu__title-script {
+  font-family: var(--script);
+  font-style: normal;
+  color: var(--brass-soft);
+  font-size: clamp(64px, 9vw, 150px);
+  line-height: 0.9;
+  margin-left: clamp(40px, 8vw, 160px); /* offset, not centred */
+  margin-top: calc(var(--baseline) * -1);
+}
+.k2-menu--ed .k2-menu__sub {
+  margin-left: auto; /* push the lede off-axis from the title */
+  max-width: 46ch;
+  text-align: left;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   3 · WHY (#why) — asymmetric broken grid, oversized № numerals off the edge
+   ════════════════════════════════════════════════════════════════════════ */
+.k2-why--ed .k2-why__head {
+  max-width: 760px;
+  margin-bottom: calc(var(--baseline) * 8);
+}
+.k2-why--ed .k2-why__lede {
+  margin-left: clamp(40px, 12vw, 220px); /* indent the lede off the title axis */
+}
+.k2-why--ed .k2-why__menu {
+  gap: calc(var(--baseline) * 1);
+}
+.k2-why--ed .k2-why__row {
+  grid-template-columns: minmax(0, 0.42fr) minmax(0, 1fr) minmax(0, 1.25fr);
+  align-items: start;
+  column-gap: clamp(20px, 4vw, 72px);
+  padding-block: calc(var(--baseline) * 5);
+  overflow: visible;
+}
+/* oversized outlined course numeral, bled off the left edge */
+.k2-why--ed .k2-why__no {
+  font-family: var(--display);
+  font-size: clamp(76px, 12vw, 184px);
+  line-height: 0.72;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(201, 162, 75, 0.34);
+  margin-left: clamp(-28px, -2.4vw, -12px);
+  align-self: start;
+  letter-spacing: 0;
+}
+.k2-why--ed .k2-why__left {
+  align-self: start;
+  padding-top: calc(var(--baseline) * 1.5);
+}
+.k2-why--ed .k2-why__body {
+  align-self: start;
+  padding-top: calc(var(--baseline) * 2);
+}
+/* stagger the rows down a gentle diagonal — editorial step, not a flat list */
+.k2-why--ed .k2-why__row:nth-child(2) { transform: translateX(clamp(0px, 4vw, 76px)); }
+.k2-why--ed .k2-why__row:nth-child(3) { transform: translateX(clamp(0px, 8vw, 152px)); }
+
+/* ════════════════════════════════════════════════════════════════════════
+   4 · PANTRY (#details) — broken offset grid + one oversized off-edge numeral
+   ════════════════════════════════════════════════════════════════════════ */
+.k2-pan2--ed .k2-pan2__inner {
+  position: relative;
+  isolation: isolate;
+}
+/* the single oversized kinetic numeral (drifts via .parallax) — the "06"
+   inclusions count, bled off the right edge as a faint outlined anchor */
+.k2-pan2--ed .k2-pan2__mega {
+  position: absolute;
+  top: calc(var(--baseline) * 1);
+  /* bleed off the right edge into the dark gutter BESIDE the cream card so it
+     reads (the card is opaque, so an over-card numeral would be hidden) */
+  right: clamp(-130px, -9.5vw, -56px);
+  z-index: 0;
+  font-family: var(--display);
+  font-size: clamp(180px, 24vw, 340px);
+  line-height: 0.66;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(201, 162, 75, 0.32);
+  pointer-events: none;
+}
+.k2-pan2--ed .k2-pan2__list {
+  position: relative;
+  z-index: 1;
+  grid-template-columns: 1.25fr 0.75fr; /* unequal columns */
+  column-gap: clamp(32px, 5vw, 88px);
+}
+/* offset the right column down a baseline band so the two columns don't line up */
+.k2-pan2--ed .k2-pan2__row:nth-child(even) {
+  transform: translateY(calc(var(--baseline) * 6));
+}
+.k2-pan2--ed .k2-pan2__row {
+  padding-block: calc(var(--baseline) * 3.5);
+}
+.k2-pan2--ed .k2-pan2__no {
+  font-family: var(--display);
+  font-size: clamp(30px, 3vw, 46px);
+  color: var(--brass-soft);
+  line-height: 0.9;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   5 · TRUST (home) — offset/staggered claims; enhance the shipped 03 + props
+   ════════════════════════════════════════════════════════════════════════ */
+.k2-trust--ed .k2-trust__grid {
+  grid-template-columns: 1.1fr 0.9fr 1fr; /* unequal columns */
+  align-items: start;
+  column-gap: clamp(28px, 4vw, 72px);
+}
+/* claims step down a diagonal; the middle claim drops a baseline band */
+.k2-trust--ed .k2-claim:nth-child(2) { transform: translateY(calc(var(--baseline) * 9)); }
+.k2-trust--ed .k2-claim:nth-child(3) { transform: translateY(calc(var(--baseline) * 4)); }
+.k2-trust--ed .k2-claim { padding-top: calc(var(--baseline) * 3); }
+/* the "03" numeral becomes the kinetic hero — anchor without a centring
+   transform so the shipped .parallax can own the y-drift cleanly */
+.k2-trust--ed .k2-trust__numeral {
+  top: clamp(40px, 6vw, 120px);
+  transform: none;
+  right: clamp(-12px, -1vw, 0px);
+}
+/* the one home-route script flourish (a single word on the third claim) */
+.k2-claim__script {
+  font-family: var(--script);
+  font-style: normal;
+  color: var(--brass-soft);
+  font-size: 1.28em;
+  line-height: 0.8;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   MOBILE (≤900px) — every broken grid collapses to one clean column.
+   Flagship still renders first + dominant (DOM order); numerals shrink so they
+   never overflow horizontally. Asymmetry is a desktop reward.
+   ════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  /* TierGrid */
+  .k2-tier--band.is-flag {
+    grid-template-columns: 1fr;
+    grid-template-areas: "head" "price" "feat";
+    column-gap: 0;
+    row-gap: calc(var(--baseline) * 2.5);
+    padding: calc(var(--baseline) * 5) calc(var(--baseline) * 3.5);
+  }
+  .k2-tier--band.is-flag .k2-tier__band-feat {
+    padding-left: 0;
+    border-left: 0;
+    border-top: 1px solid var(--hair-2);
+    padding-top: calc(var(--baseline) * 2.5);
+  }
+  .k2-tier--band .k2-tier__name { font-size: clamp(40px, 11vw, 60px); }
+  .k2-tier--band .k2-tier__num { font-size: clamp(60px, 17vw, 96px); }
+  .k2-menu__subrow { grid-template-columns: 1fr; gap: calc(var(--baseline) * 3); }
+
+  /* Menu masthead */
+  .k2-menu--ed .k2-menu__title-script { margin-left: 0; }
+  .k2-menu--ed .k2-menu__sub { margin-left: 0; }
+
+  /* Why — un-stagger + drop the off-edge bleed */
+  .k2-why--ed .k2-why__row {
+    grid-template-columns: 1fr;
+    gap: calc(var(--baseline) * 1.5);
+    transform: none !important;
+    row-gap: calc(var(--baseline) * 1);
+  }
+  .k2-why--ed .k2-why__no { font-size: clamp(56px, 18vw, 96px); margin-left: 0; }
+  .k2-why--ed .k2-why__lede { margin-left: 0; }
+
+  /* Pantry — single column, calm the mega numeral, no row offset */
+  .k2-pan2--ed .k2-pan2__list { grid-template-columns: 1fr; }
+  .k2-pan2--ed .k2-pan2__row:nth-child(even) { transform: none; }
+  .k2-pan2--ed .k2-pan2__mega { font-size: clamp(120px, 40vw, 200px); opacity: 0.6; }
+
+  /* Trust — un-stagger */
+  .k2-trust--ed .k2-trust__grid { grid-template-columns: 1fr; }
+  .k2-trust--ed .k2-claim:nth-child(2),
+  .k2-trust--ed .k2-claim:nth-child(3) { transform: none; }
+}
+
+/* ── reduced motion / motion-off: kill the band sheen (layout asymmetry is pure
+   CSS and already static; .parallax / .reveal-lines are guarded upstream) ──── */
+@media (prefers-reduced-motion: reduce) {
+  .k2-tier--band.is-flag::after { animation: none; opacity: 0; }
+}
+body[data-motion="off"] .k2-tier--band.is-flag::after { animation: none; opacity: 0; }

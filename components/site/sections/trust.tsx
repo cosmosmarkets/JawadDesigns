@@ -8,8 +8,9 @@ export function Trust() {
   const mq = ["JAWAD DESIGN", "✦", "MADE TO ORDER", "✦", "FIVE DAYS TO LIVE", "✦", "ONE CHEF, ONE TICKET", "✦"];
   const track = [...mq, ...mq];
   return (
-    <section id="trust" className="sec cream k2-trust" data-screen-label="trust">
-      <span className="k2-trust__numeral" aria-hidden="true">03</span>
+    <section id="trust" className="sec cream k2-trust k2-trust--ed" data-screen-label="trust">
+      {/* the shipped "03" anchor, now the section's kinetic hero (drifts via .parallax) */}
+      <span className="k2-trust__numeral parallax" data-depth="mid" aria-hidden="true">03</span>
       <div className="k3-paper k3-paper--ticket" aria-hidden="true">
         <div className="k3-ticket__hd">
           <span>TABLE 01</span>
@@ -23,17 +24,29 @@ export function Trust() {
         <div className="mq__t">{track.map((t, i) => <span key={i} className="display k2-trust__mqitem">{t}</span>)}</div>
       </div>
       <div className="wrap k2-trust__grid">
-        {claims.map((c, i) => (
-          <article key={i} className={"k2-claim reveal d" + i}>
-            <span className="k3-drawline reveal k2-claim__line" />
-            <h3 className="headline k2-claim__h reveal-lines">
-              {c.h}
-              <br />
-              <span className="k2-claim__h2">{c.h2}</span>
-            </h3>
-            <p className="k2-claim__p">{c.p}</p>
-          </article>
-        ))}
+        {claims.map((c, i) => {
+          // one home-route script flourish: style an EXISTING word of the third
+          // claim in the Pinyon hand. This claim block-fades (no reveal-lines)
+          // so the line mask never clips the script glyph's flourish.
+          const accent = i === 2;
+          return (
+            <article key={i} className={"k2-claim reveal d" + i}>
+              <span className="k3-drawline reveal k2-claim__line" />
+              <h3 className={"headline k2-claim__h" + (accent ? "" : " reveal-lines")}>
+                {c.h}
+                <br />
+                <span className="k2-claim__h2">
+                  {accent ? (
+                    <>done <span className="k2-claim__script">exceptionally</span>.</>
+                  ) : (
+                    c.h2
+                  )}
+                </span>
+              </h3>
+              <p className="k2-claim__p">{c.p}</p>
+            </article>
+          );
+        })}
       </div>
     </section>
   );

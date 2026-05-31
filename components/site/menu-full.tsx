@@ -24,27 +24,50 @@ export const TIERS: Tier[] = [
     why: "The full experience — strategy, brand, and a bespoke build with the kind of polish that gets your site screenshotted and shared.", cta: "Book the Chef's Table" },
 ];
 
-/* Shared pricing grid. Tier CTAs preselect the dish on /contact. */
+/* Shared pricing grid — Stage 6 "hero band + supporting row." The Chef's Table
+   (rank 2) is pulled OUT of the uniform map and rendered as a full-width
+   dominant band; À la carte + Tasting Menu sit beneath as a subordinate 2-up
+   row. Names/prices/CTA targets still come straight from TIERS (data frozen). */
 export function TierGrid() {
+  const flag = TIERS.find((t) => t.rank === 2);
+  const minis = TIERS.filter((t) => t.rank !== 2);
   return (
-    <div className="wrap k2-menu__grid">
-      {TIERS.map((t) => (
-        <article key={t.name} className={"k2-tier reveal d" + t.rank + (t.rank === 2 ? " is-flag" : "") + (t.rank === 1 ? " is-feat" : "")}>
-          {t.rank === 2 && <span className="k2-tier__ribbon flag">Chef&apos;s table</span>}
-          {t.rank === 1 && <span className="k2-tier__ribbon">Most ordered</span>}
-          <span className="eyebrow-mono k2-tier__tag">{t.tag}</span>
-          <h3 className="headline k2-tier__name">{t.name}</h3>
-          <div className="k2-tier__price"><span className="k2-tier__from">from</span><span className="display k2-tier__num">${t.price}</span></div>
-          {t.why && <p className="k2-tier__why">{t.why}</p>}
-          <ul className="k2-tier__feat">{t.feat.map((f) => <li key={f}><span aria-hidden="true">✦</span>{f}</li>)}</ul>
-          <Link
-            href={"/contact?dish=" + encodeURIComponent(t.name)}
-            className={"btn " + (t.rank === 2 ? "red" : "ghost") + " k2-tier__cta"}
-          >
-            {t.cta} <span className="arrow">→</span>
-          </Link>
+    <div className="wrap k2-menu__grid k2-menu__grid--editorial">
+      {flag && (
+        <article className="k2-tier k2-tier--band is-flag reveal">
+          <span className="k2-tier__ribbon flag">Chef&apos;s table</span>
+          <div className="k2-tier__band-head">
+            <span className="eyebrow-mono k2-tier__tag">{flag.tag}</span>
+            <h3 className="headline k2-tier__name">{flag.name}</h3>
+            {flag.why && <p className="k2-tier__why">{flag.why}</p>}
+          </div>
+          <div className="k2-tier__band-price">
+            <span className="k2-tier__from">from</span>
+            {/* the kinetic hero number — drifts via the shipped .parallax */}
+            <span className="display k2-tier__num parallax" data-depth="fg">${flag.price}</span>
+          </div>
+          <div className="k2-tier__band-feat">
+            <ul className="k2-tier__feat">{flag.feat.map((f) => <li key={f}><span aria-hidden="true">✦</span>{f}</li>)}</ul>
+            <Link href={"/contact?dish=" + encodeURIComponent(flag.name)} className="btn red k2-tier__cta">
+              {flag.cta} <span className="arrow">→</span>
+            </Link>
+          </div>
         </article>
-      ))}
+      )}
+      <div className="k2-menu__subrow">
+        {minis.map((t) => (
+          <article key={t.name} className={"k2-tier k2-tier--mini reveal d" + t.rank + (t.rank === 1 ? " is-feat" : "")}>
+            {t.rank === 1 && <span className="k2-tier__ribbon">Most ordered</span>}
+            <span className="eyebrow-mono k2-tier__tag">{t.tag}</span>
+            <h3 className="headline k2-tier__name">{t.name}</h3>
+            <div className="k2-tier__price"><span className="k2-tier__from">from</span><span className="display k2-tier__num">${t.price}</span></div>
+            <ul className="k2-tier__feat">{t.feat.map((f) => <li key={f}><span aria-hidden="true">✦</span>{f}</li>)}</ul>
+            <Link href={"/contact?dish=" + encodeURIComponent(t.name)} className="btn ghost k2-tier__cta">
+              {t.cta} <span className="arrow">→</span>
+            </Link>
+          </article>
+        ))}
+      </div>
     </div>
   );
 }
@@ -68,7 +91,7 @@ export function MenuFull() {
   return (
     <main>
       {/* Services intro */}
-      <section id="why" className="sec ink k2-why" data-screen-label="why-order">
+      <section id="why" className="sec ink k2-why k2-why--ed" data-screen-label="why-order">
         <header className="wrap k2-why__head reveal">
           <span className="kicker">The menu</span>
           <h2 className="headline reveal-lines k2-why__title">A short menu, <span>cooked properly.</span></h2>
@@ -77,8 +100,9 @@ export function MenuFull() {
         <ol className="wrap k2-why__menu">
           {WHY.map((it, i) => (
             <li key={it.n} className={"k2-why__row reveal d" + (i % 3)}>
+              {/* oversized course numeral, bled off the left edge (editorial device) */}
+              <span className="k2-why__no" aria-hidden="true">{it.n}</span>
               <div className="k2-why__left">
-                <span className="eyebrow-mono k2-why__no">№ {it.n}</span>
                 <h3 className="headline k2-why__name">{it.name}</h3>
                 <span className="k2-why__leader" aria-hidden="true" />
                 <span className="k2-why__price">{it.price}</span>
@@ -92,9 +116,13 @@ export function MenuFull() {
       <div className="k3-hairline" aria-hidden />
 
       {/* Pricing tiers */}
-      <section id="menu" className="k3-light k2-menu" data-screen-label="menu">
+      <section id="menu" className="k3-light k2-menu k2-menu--ed" data-screen-label="menu">
         <header className="wrap k2-menu__head reveal">
-          <h2 className="headline reveal-lines k2-menu__title">Three ways <span>to dine.</span></h2>
+          <h2 className="headline k2-menu__title">
+            <span className="k2-menu__title-main">Three ways to</span>
+            {/* the single /menu script flourish — "dine" in the Pinyon hand */}
+            <span className="k2-menu__title-script">dine.</span>
+          </h2>
           <p className="k2-menu__sub">Every option is designed and built by one chef, start to ship. Prices are where the conversation starts.</p>
         </header>
         <div className="wrap k3-paper k3-paper--menu reveal">
@@ -103,19 +131,23 @@ export function MenuFull() {
       </section>
 
       {/* Always included */}
-      <section id="details" className="k3-light k2-pan2" data-screen-label="pantry">
+      <section id="details" className="k3-light k2-pan2 k2-pan2--ed" data-screen-label="pantry">
         <header className="wrap k2-pan2__head reveal">
           <h2 className="headline reveal-lines k2-pan2__title">What every plate <span>comes with.</span></h2>
           <p className="k2-pan2__sub">No upsells, no surprises. These aren&apos;t add-ons — they&apos;re the standard.</p>
         </header>
-        <div className="wrap k3-paper k2-pan2__list">
-          {PANTRY.map((it, i) => (
-            <div key={it.h} className={"k2-pan2__row reveal d" + (i % 3)}>
-              <span className="display k2-pan2__no">{String(i + 1).padStart(2, "0")}</span>
-              <h3 className="headline k2-pan2__h">{it.h}</h3>
-              <p className="k2-pan2__p">{it.p}</p>
-            </div>
-          ))}
+        <div className="wrap k2-pan2__inner">
+          {/* the single oversized kinetic numeral (inclusions count), off the edge */}
+          <span className="k2-pan2__mega parallax" data-depth="bg" aria-hidden="true">06</span>
+          <div className="k3-paper k2-pan2__list">
+            {PANTRY.map((it, i) => (
+              <div key={it.h} className={"k2-pan2__row reveal d" + (i % 3)}>
+                <span className="display k2-pan2__no">{String(i + 1).padStart(2, "0")}</span>
+                <h3 className="headline k2-pan2__h">{it.h}</h3>
+                <p className="k2-pan2__p">{it.p}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </main>

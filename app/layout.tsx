@@ -14,6 +14,7 @@ import "./styles/k3-pass4-material.css";
 import "./styles/k3-transition.css";
 import "./styles/k3-menu-unfold.css";
 import "./styles/k3-ticket.css";
+import "./styles/k3-editorial.css";
 import { ThemeProvider } from "@/components/site/theme-provider";
 import { Atmosphere } from "@/components/site/atmosphere";
 import { Nav } from "@/components/site/nav";
